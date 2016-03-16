@@ -28,38 +28,6 @@ void play_melody(const Note *notes, uint16_t length, uint16_t period_duration_ms
     }
 }
 
-Melody get_imperial_march_melody() {
-    // From http://www.tocapartituras.com/2011/07/la-marcha-imperial-de-star-wars.html
-    static Note imperial_march[] = {
-        {NOTE_A4, 1./4},
-        {NOTE_A4, 1./4},
-        {NOTE_A4, 1./4},
-        {NOTE_F4, 3./16},
-        {NOTE_C5, 1./16},
-
-        {NOTE_A4, 1./4},
-        {NOTE_F4, 3./16},
-        {NOTE_C5, 1./16},
-        {NOTE_A4, 1./2},
-
-        {NOTE_E5, 1./4},
-        {NOTE_E5, 1./4},
-        {NOTE_E5, 1./4},
-        {NOTE_F5, 3./16},
-        {NOTE_C5, 1./16},
-
-        {NOTE_GS4, 1./4},
-        {NOTE_F4, 3./16},
-        {NOTE_C5, 1./16},
-        {NOTE_A4, 1./2}
-    };
-    Melody melody = {
-        imperial_march,
-        sizeof(imperial_march)/sizeof(Note)
-    };
-    return melody;
-}
-
 void play_dot_dash_data(uint16_t data, uint16_t duration_ms) {
 	uint16_t dot_freq = 880;
     uint16_t dash_freq = 440;
@@ -86,4 +54,67 @@ void play_error(void) {
 	delay_ms(250);
 	play_sound(440, 500);
     delay_ms(250);
+}
+
+Melody get_imperial_march_melody() {
+    // From http://www.tocapartituras.com/2011/07/la-marcha-imperial-de-star-wars.html
+    static Note imperial_march[] = {
+        {NOTE_A4, 1./4},
+        {NOTE_A4, 1./4},
+        {NOTE_A4, 1./4},
+        {NOTE_F4, 3./16},
+        {NOTE_C5, 1./16},
+
+        {NOTE_A4, 1./4},
+        {NOTE_F4, 3./16},
+        {NOTE_C5, 1./16},
+        {NOTE_A4, 1./2},
+
+        {NOTE_E5, 1./4},
+        {NOTE_E5, 1./4},
+        {NOTE_E5, 1./4},
+        {NOTE_F5, 3./16},
+        {NOTE_C5, 1./16},
+
+        {NOTE_GS4, 1./4},
+        {NOTE_F4, 3./16},
+        {NOTE_C5, 1./16},
+        {NOTE_A4, 1./2},
+
+        {NOTE_A5, 1./4},
+        {NOTE_A4, 3./16},
+        {NOTE_A4, 1./16},
+        {NOTE_A5, 1./4},
+        {NOTE_GS5, 3./16},
+        {NOTE_G5, 1./16},
+
+        {NOTE_FS5, 1./16},
+        {NOTE_F5, 1./16},
+        {NOTE_FS5, 1./8},
+        {SILENCE, 1./8},
+        {NOTE_AS4, 1./8},
+        {NOTE_DS5, 1./4},
+        {NOTE_D5, 3./16},
+        {NOTE_CS5, 1./16},
+
+        {NOTE_C5, 1./16},
+        {NOTE_B4, 1./16},
+        {NOTE_C5, 1./8},
+        {SILENCE, 1./8},
+        {NOTE_F4, 1./8},
+        {NOTE_GS4, 1./4},
+        {NOTE_F4, 3./16},
+        {NOTE_GS4, 1./16},
+
+        {NOTE_C5, 1./4},
+        {NOTE_A4, 3./16},
+        {NOTE_C5, 1./16},
+        {NOTE_E5, 1./2}
+    };
+    Melody melody = {
+        imperial_march,
+        sizeof(imperial_march)/sizeof(Note),
+        2000
+    };
+    return melody;
 }

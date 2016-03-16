@@ -11,8 +11,9 @@ typedef struct {
 } Note;
 
 typedef struct {
-    Note*    notes;  // notes
+    Note*    notes;   // notes
     uint16_t length;  // number of notes
+    uint16_t period;  // duration of period (ms)
 } Melody;
 
 #ifndef _SOUND_OUTPUT_PIN
@@ -24,8 +25,6 @@ void play_sound(uint16_t, uint16_t);
 void play_note(Note, uint16_t);
 
 void play_melody(const Note*, uint16_t, uint16_t);
-
-Melody get_imperial_march_melody();
 
 /*
  * Transmit bits (starting from the most relevant) playing dot & dashes
@@ -39,6 +38,8 @@ void play_dot_dash_data(uint16_t data, uint16_t duration_ms);
 void play_ok(void);
 
 void play_error(void);
+
+Melody get_imperial_march_melody();
 
 #define SILENCE  0
 #define NOTE_B0  31
