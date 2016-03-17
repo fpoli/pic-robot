@@ -3,7 +3,6 @@
 
 #include <xc.h>
 #include <stdint.h>
-#include <delays.h>
 #include "config.h"
 
 void inline delay_ms(uint16_t);

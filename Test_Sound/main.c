@@ -16,8 +16,11 @@ void main(void) {
 
     LATBbits.LATB3 = 0b1; // LED on
 
-    play_sound(880, 10000);
-    play_sound(880*2, 10000);
+    play_sound(220,  1000);
+    play_sound(440,  1000);
+    play_sound(880,  1000);
+    play_sound(1760, 1000);
+    delay_ms(1000);
 
     Melody melody = get_imperial_march_melody();
 
