@@ -19,18 +19,21 @@ void init(void) {
 
 void main(void) {
     init();
+    printf("\n");
 
     play_ok();
 
     // MPU6050 configuration
-    MPU6050_write_byte(PWR_MGMT_1, 0b00100000);
-    MPU6050_write_byte(CONFIG, 0b00000101); 
-    MPU6050_write_byte(GYRO_CONFIG, 0b00000000);
-    MPU6050_write_byte(ACCEL_CONFIG, 0b00000000);
+    MPU6050_write_byte(PWR_MGMT_1, 0b00101000);   // CYCLE & TEMP_DIS
+    MPU6050_write_byte(PWR_MGMT_2, 0b00000000);   // enable all axis
+    MPU6050_write_byte(FIFO_EN, 0b00000000);      // disable fifo buffer
+    MPU6050_write_byte(CONFIG, 0b00000101);       // configure low pass filter
+    MPU6050_write_byte(GYRO_CONFIG, 0b00000000);  //
+    MPU6050_write_byte(ACCEL_CONFIG, 0b00000000); //
 
-    uint16_t accel_x, accel_y, accel_z;
-    uint16_t gyro_x, gyro_y, gyro_z;
-    uint16_t temp;
+    int16_t accel_x, accel_y, accel_z;
+    int16_t gyro_x, gyro_y, gyro_z;
+    int16_t temp;
 
     // It is recommended that the main() function does not end
     // (XC8 manual, section 5.10, page 209)
@@ -43,10 +46,13 @@ void main(void) {
         gyro_z = (MPU6050_read_byte(GYRO_ZOUT_H) << 8) + MPU6050_read_byte(GYRO_ZOUT_L);
         temp = (MPU6050_read_byte(TEMP_OUT_H) << 8) + MPU6050_read_byte(TEMP_OUT_L);
 
-        printf("accel x: %d, y: %d, z: %d\n", accel_x, accel_y, accel_z);
-        printf("gyro x: %d, y: %d, z: %d\n", gyro_x, gyro_y, gyro_z);
-        printf("temp: %d\n", temp);
+        printf(
+            "accel x: %+6d, y: %+6d, z: %+6d  gyro x: %+6d, y: %+6d, z: %+6d  temp: %+6d\n",
+            accel_x, accel_y, accel_z,
+            gyro_x, gyro_y, gyro_z,
+            temp
+        );
 
-        delay_ms(100);
+        delay_ms(1);
     }
 }

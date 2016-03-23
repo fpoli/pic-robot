@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include "config.h"
 #include "utils.h"
+#include "sound.h"
+#include "uart.h"
 
 #define ACCEL_XOUT_H 0x3B
 #define ACCEL_XOUT_L 0x3C
@@ -27,12 +29,16 @@
 #define CONFIG       0x1A
 #define GYRO_CONFIG  0x1B
 #define ACCEL_CONFIG 0x1C
+#define FIFO_EN      0x23
 #define PWR_MGMT_1   0x6B
+#define PWR_MGMT_2   0x6C
 
 void MPU6050_init(void);
 
 void MPU6050_write_byte(uint8_t dst_register, uint8_t data);
 
 uint8_t MPU6050_read_byte(uint8_t dst_register);
+
+void I2C_error_handler(int16_t error);
 
 #endif	/* MPU6050_H */
