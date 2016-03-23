@@ -1,8 +1,8 @@
 #include "melodies.h"
 
-Melody get_imperial_march_melody() {
+Melody get_imperial_march_melody(void) {
     // From http://www.tocapartituras.com/2011/07/la-marcha-imperial-de-star-wars.html
-    static Note imperial_march[] = {
+    static const Note imperial_march[] = {
         {NOTE_A4, 1./4},
         {NOTE_A4, 1./4},
         {NOTE_A4, 1./4},
@@ -63,8 +63,8 @@ Melody get_imperial_march_melody() {
     return melody;
 }
 
-Melody get_birthday_melody() {
-    static Note birthday[] = {
+Melody get_happy_birthday_melody(void) {
+    static const Note birthday[] = {
         {NOTE_D4, 1./4},
         {NOTE_D4, 1./8},
         {NOTE_E4, 1./8},

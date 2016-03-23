@@ -25,9 +25,11 @@ void main(void) {
 
     Melody melody = get_imperial_march_melody();
     play_melody(melody.notes, melody.length, melody.period);
+    delay_ms(500);
 
-    //melody = get_birthday_melody();
+    melody = get_happy_birthday_melody();
     play_melody(melody.notes, melody.length, melody.period);
+    delay_ms(500);
 
     // It is recommended that the main() function does not end
     // (XC8 manual, section 5.10, page 209)
