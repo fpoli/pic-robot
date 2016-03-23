@@ -15,6 +15,8 @@
       <itemPath>../lib/config.h</itemPath>
       <itemPath>../lib/sound.h</itemPath>
       <itemPath>../lib/utils.c</itemPath>
+      <itemPath>../lib/melodies.h</itemPath>
+      <itemPath>../lib/melodies.c</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -107,7 +109,7 @@
         <property key="calibrate-oscillator-value" value="0x3400"/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="0-1000"/>
+        <property key="code-model-rom" value="0-1200"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>

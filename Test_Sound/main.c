@@ -4,6 +4,7 @@
 #include "../lib/config.h"
 #include "../lib/utils.h"
 #include "../lib/sound.h"
+#include "../lib/melodies.h"
 
 void init(void) {
     // Initialize data direction of PORTB registers
@@ -23,16 +24,14 @@ void main(void) {
     delay_ms(1000);
 
     Melody melody = get_imperial_march_melody();
+    play_melody(melody.notes, melody.length, melody.period);
+
+    //melody = get_birthday_melody();
+    play_melody(melody.notes, melody.length, melody.period);
 
     // It is recommended that the main() function does not end
     // (XC8 manual, section 5.10, page 209)
     while(1) {
-        play_melody(melody.notes, melody.length, melody.period);
-
-        delay_ms(2000);
-        play_sound(880, 100);
-        delay_ms(100);
-        play_sound(880, 100);
-        delay_ms(2000);
+        play_sound(400 + (rand() / 65), 50);
     }
 }

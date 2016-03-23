@@ -52,3 +52,11 @@ uint8_t parity(uint8_t data) {
 
 	return (ones & 0x01); 
 }
+
+uint16_t rand(void) {
+    static uint16_t lfsr = 0xACE1;
+    static bit flag = 0;
+
+    flag = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
+    return lfsr = (lfsr >> 1) | (flag << 15);
+}

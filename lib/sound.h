@@ -39,8 +39,6 @@ void play_ok(void);
 
 void play_error(void);
 
-Melody get_imperial_march_melody();
-
 #define SILENCE  0
 #define NOTE_B0  31
 #define NOTE_C1  33
