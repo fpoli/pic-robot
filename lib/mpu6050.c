@@ -13,9 +13,6 @@ void MPU6050_init(void) {
 }
 
 void MPU6050_write_byte(uint8_t dst_register, uint8_t data) {
-    // If this line is removed, it doesn't work... why? WHY?
-    printf("debug: MPU6050_write_byte(%x, %x)\n", dst_register, data);
-
     // Protocol described in data sheet, section 15.6.6.4, page 246
     IdleI2C1();
     StartI2C1();

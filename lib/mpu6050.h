@@ -26,6 +26,7 @@
 #define MPU6050_SLAVE_WRITE 0b11010000
 #define MPU6050_SLAVE_READ  0b11010001
 
+#define SMPRT_DIV    0x19
 #define CONFIG       0x1A
 #define GYRO_CONFIG  0x1B
 #define ACCEL_CONFIG 0x1C
