@@ -25,6 +25,7 @@ void main(void) {
 
     // MPU6050 configuration
     MPU6050_write_byte(PWR_MGMT_1, 0b00100000);   // CYCLE
+    MPU6050_write_byte(PWR_MGMT_2, 0b11000000);   // set LP_WAKE_CTRL frequency
     MPU6050_write_byte(SMPRT_DIV, 0b00000000);    // set sample rate divider
     MPU6050_write_byte(FIFO_EN, 0b00000000);      // disable fifo buffer
     MPU6050_write_byte(CONFIG, 0b00000101);       // configure low pass filter
@@ -57,7 +58,7 @@ void main(void) {
             (int16_t)(theta * 1000)
         );
 
-        delay_ms(1);
-        //play_sound((uint16_t)(theta * 1000), 40);
+        //delay_ms(1);
+        play_sound((uint16_t)(theta * 1000), 40);
     }
 }
