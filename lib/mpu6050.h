@@ -33,13 +33,18 @@
 #define FIFO_EN      0x23
 #define PWR_MGMT_1   0x6B
 #define PWR_MGMT_2   0x6C
+#define WHO_AM_I     0x75
 
-void MPU6050_init(void);
+void MPU6050_init_I2C(void);
+
+void MPU6050_configure(void);
 
 void MPU6050_write_byte(uint8_t dst_register, uint8_t data);
 
 uint8_t MPU6050_read_byte(uint8_t dst_register);
 
 void I2C_error_handler(int16_t error);
+
+void MPU6050_test_I2C(void);
 
 #endif	/* MPU6050_H */
