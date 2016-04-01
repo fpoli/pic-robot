@@ -33,24 +33,24 @@ void init(void) {
 void main(void) {
     init();
 
-    int16_t old_accel_x = 0;
     int16_t accel_x, accel_y, accel_z;
-    int16_t gyro_x, gyro_y, gyro_z;
-    int16_t temp;
-    float temp_celsius, theta;
+    float theta;
+    //int16_t gyro_x, gyro_y, gyro_z;
+    //int16_t temp;
+    //float temp_celsius;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
         accel_x = (MPU6050_read_byte(ACCEL_XOUT_H) << 8) + MPU6050_read_byte(ACCEL_XOUT_L);
         accel_y = (MPU6050_read_byte(ACCEL_YOUT_H) << 8) + MPU6050_read_byte(ACCEL_YOUT_L);
         accel_z = (MPU6050_read_byte(ACCEL_ZOUT_H) << 8) + MPU6050_read_byte(ACCEL_ZOUT_L);
-        gyro_x = (MPU6050_read_byte(GYRO_XOUT_H) << 8) + MPU6050_read_byte(GYRO_XOUT_L);
-        gyro_y = (MPU6050_read_byte(GYRO_YOUT_H) << 8) + MPU6050_read_byte(GYRO_YOUT_L);
-        gyro_z = (MPU6050_read_byte(GYRO_ZOUT_H) << 8) + MPU6050_read_byte(GYRO_ZOUT_L);
-        temp = (MPU6050_read_byte(TEMP_OUT_H) << 8) + MPU6050_read_byte(TEMP_OUT_L);
+        //gyro_x = (MPU6050_read_byte(GYRO_XOUT_H) << 8) + MPU6050_read_byte(GYRO_XOUT_L);
+        //gyro_y = (MPU6050_read_byte(GYRO_YOUT_H) << 8) + MPU6050_read_byte(GYRO_YOUT_L);
+        //gyro_z = (MPU6050_read_byte(GYRO_ZOUT_H) << 8) + MPU6050_read_byte(GYRO_ZOUT_L);
+        //temp = (MPU6050_read_byte(TEMP_OUT_H) << 8) + MPU6050_read_byte(TEMP_OUT_L);
  
-        temp_celsius = ((float)temp) / 340 + 36.53;
         theta = ((float)accel_y) / ((float)accel_z);
+        //temp_celsius = ((float)temp) / 340 + 36.53;
 
         /*printf("accel: %+6d, %+6d, %+6d  gyro: %+6d, %+6d, %+6d  temp: %+3d cC  tetha: %+6d\n",
             accel_x, accel_y, accel_z,
@@ -59,11 +59,8 @@ void main(void) {
             (int16_t)(theta * 1000)
         );*/
 
-        // Notify that the data changed
-        if (accel_x != old_accel_x) {
-            LATBbits.LATB3 = !LATBbits.LATB3;
-            old_accel_x = accel_x;
-        }
+        // Notify a loop cycle completion
+        LATBbits.LATB3 = !LATBbits.LATB3;
     }
 
     // It is recommended that the main() function does not end
