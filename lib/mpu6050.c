@@ -30,7 +30,7 @@ void MPU6050_configure(void) {
     MPU6050_write_byte(PWR_MGMT_1, 0b00000000);   // Disable SLEEP and CYCLE
 }
 
-void MPU6050_write_byte(uint8_t dst_register, uint8_t data) {
+void MPU6050_write(uint8_t dst_register, uint8_t *data, uint16_t data_len) {
     // Protocol described in data sheet, section 15.6.6.4, page 246
     IdleI2C1();
     StartI2C1();
@@ -43,15 +43,21 @@ void MPU6050_write_byte(uint8_t dst_register, uint8_t data) {
     if (WriteI2C1(dst_register) < 0)
         I2C_error_handler(2);
 
-    IdleI2C1();
-    if (WriteI2C1(data) < 0)
-        I2C_error_handler(3);
+    for (uint16_t i = 0; i < data_len; ++i) {
+        IdleI2C1();
+        if (WriteI2C1(data[i]) < 0)
+            I2C_error_handler(3);
+    }
 
     IdleI2C1();
     StopI2C1();
 }
 
-uint8_t MPU6050_read_byte(uint8_t dst_register) {
+void MPU6050_write_byte(uint8_t dst_register, uint8_t data) {
+    MPU6050_write(dst_register, &data, 1);
+}
+
+void MPU6050_read(uint8_t dst_register, uint8_t *data, uint16_t data_len) {
     IdleI2C1();
     StartI2C1();
 
@@ -71,18 +77,24 @@ uint8_t MPU6050_read_byte(uint8_t dst_register) {
         I2C_error_handler(5);
 
     IdleI2C1();
-    uint8_t data = ReadI2C1();
+    for (uint16_t i = 0; i < data_len; ++i) {
+        if (i > 0) AckI2C1();
+        data[i] = ReadI2C1();
+    }
 
-    IdleI2C1();
     NotAckI2C1();
     StopI2C1();
+}
 
+uint8_t MPU6050_read_byte(uint8_t dst_register) {
+    uint8_t data;
+    MPU6050_read(dst_register, &data, 1);
     return data;
 }
 
 void I2C_error_handler(int16_t error) {
     play_error();
-    printf("[MPU6050] Error %d in I2C protocol\n");
+    printf("[MPU6050] Error %d in I2C protocol\n", error);
     while (1);
 }
 

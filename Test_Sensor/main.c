@@ -33,34 +33,37 @@ void init(void) {
 void main(void) {
     init();
 
+    Accel_regs accel, old_accel;
+    int16_t old_accel_x = 0, old_accel_y = 0, old_accel_z = 0;
     int16_t accel_x, accel_y, accel_z;
     float theta;
-    //int16_t gyro_x, gyro_y, gyro_z;
-    //int16_t temp;
-    //float temp_celsius;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
-        accel_x = (MPU6050_read_byte(ACCEL_XOUT_H) << 8) + MPU6050_read_byte(ACCEL_XOUT_L);
-        accel_y = (MPU6050_read_byte(ACCEL_YOUT_H) << 8) + MPU6050_read_byte(ACCEL_YOUT_L);
-        accel_z = (MPU6050_read_byte(ACCEL_ZOUT_H) << 8) + MPU6050_read_byte(ACCEL_ZOUT_L);
-        //gyro_x = (MPU6050_read_byte(GYRO_XOUT_H) << 8) + MPU6050_read_byte(GYRO_XOUT_L);
-        //gyro_y = (MPU6050_read_byte(GYRO_YOUT_H) << 8) + MPU6050_read_byte(GYRO_YOUT_L);
-        //gyro_z = (MPU6050_read_byte(GYRO_ZOUT_H) << 8) + MPU6050_read_byte(GYRO_ZOUT_L);
-        //temp = (MPU6050_read_byte(TEMP_OUT_H) << 8) + MPU6050_read_byte(TEMP_OUT_L);
- 
+        // Read registers from sensor
+        MPU6050_read(ACCEL_REGS, (uint8_t*) &accel, ACCEL_REGS_SIZE);
+
+        // Build 16 bit little endian values
+        accel_x = (accel.xout_h << 8) + accel.xout_l;
+        accel_y = (accel.yout_h << 8) + accel.yout_l;
+        accel_z = (accel.zout_h << 8) + accel.zout_l;
+
         theta = ((float)accel_y) / ((float)accel_z);
-        //temp_celsius = ((float)temp) / 340 + 36.53;
 
-        /*printf("accel: %+6d, %+6d, %+6d  gyro: %+6d, %+6d, %+6d  temp: %+3d cC  tetha: %+6d\n",
+        printf("accel: %+6d, %+6d, %+6d  tetha: %+6d\n",
             accel_x, accel_y, accel_z,
-            gyro_x, gyro_y, gyro_z,
-            (int16_t)(temp_celsius * 100),
             (int16_t)(theta * 1000)
-        );*/
+        );
 
-        // Notify a loop cycle completion
-        LATBbits.LATB3 = !LATBbits.LATB3;
+        // Notify new data
+        if (accel_x != old_accel_x ||
+            accel_y != old_accel_y ||
+            accel_z != old_accel_z) {
+            LATBbits.LATB3 = !LATBbits.LATB3;
+            old_accel_x = accel_x;
+            old_accel_y = accel_y;
+            old_accel_z = accel_z;
+        }
     }
 
     // It is recommended that the main() function does not end

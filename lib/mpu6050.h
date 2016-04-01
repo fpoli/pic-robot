@@ -35,12 +35,51 @@
 #define PWR_MGMT_2   0x6C
 #define WHO_AM_I     0x75
 
+typedef struct {
+    uint8_t xout_h;
+    uint8_t xout_l;
+    uint8_t yout_h;
+    uint8_t yout_l;
+    uint8_t zout_h;
+    uint8_t zout_l;
+} Accel_regs;
+#define ACCEL_REGS 0x3B
+#define ACCEL_REGS_SIZE 6
+
+typedef struct {
+    uint8_t out_h;
+    uint8_t out_l;
+} Temp_regs;
+#define TEMP_REGS 0x41
+#define TEMP_REGS_SIZE 2
+
+typedef struct {
+    uint8_t xout_h;
+    uint8_t xout_l;
+    uint8_t yout_h;
+    uint8_t yout_l;
+    uint8_t zout_h;
+    uint8_t zout_l;
+} Gyro_regs;
+#define GYRO_REGS 0x43
+#define GYRO_REGS_SIZE 6
+
+typedef struct {
+    Accel_regs accel;
+    Temp_regs temp;
+    Gyro_regs gyro;
+} Data_regs;
+#define DATA_REGS 0x3B
+#define DATA_REGS_SIZE 14
+
 void MPU6050_init_I2C(void);
 
 void MPU6050_configure(void);
 
+void MPU6050_write(uint8_t dst_register, uint8_t *data, uint16_t data_len);
 void MPU6050_write_byte(uint8_t dst_register, uint8_t data);
 
+void MPU6050_read(uint8_t dst_register, uint8_t *data, uint16_t data_len);
 uint8_t MPU6050_read_byte(uint8_t dst_register);
 
 void I2C_error_handler(int16_t error);
