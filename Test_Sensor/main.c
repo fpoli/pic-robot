@@ -34,7 +34,7 @@ void main(void) {
     init();
 
     Accel_regs accel, old_accel;
-    int16_t old_accel_x = 0, old_accel_y = 0, old_accel_z = 0;
+    static bit data_changed = 0;
     int16_t accel_x, accel_y, accel_z;
     float theta;
 
@@ -43,6 +43,18 @@ void main(void) {
         // Read registers from sensor
         MPU6050_read(ACCEL_REGS, (uint8_t*) &accel, ACCEL_REGS_SIZE);
 
+        data_changed =
+                accel.xout_h != old_accel.xout_h ||
+                accel.xout_l != old_accel.xout_l ||
+                accel.yout_h != old_accel.yout_h ||
+                accel.yout_l != old_accel.yout_l ||
+                accel.zout_h != old_accel.zout_h ||
+                accel.zout_l != old_accel.zout_l;
+
+        // If the data did not change, read again
+        if (!data_changed) continue;
+        old_accel = accel;
+
         // Build 16 bit little endian values
         accel_x = (accel.xout_h << 8) + accel.xout_l;
         accel_y = (accel.yout_h << 8) + accel.yout_l;
@@ -50,20 +62,14 @@ void main(void) {
 
         theta = ((float)accel_y) / ((float)accel_z);
 
+        // Report new data
         printf("accel: %+6d, %+6d, %+6d  tetha: %+6d\n",
             accel_x, accel_y, accel_z,
             (int16_t)(theta * 1000)
         );
 
-        // Notify new data
-        if (accel_x != old_accel_x ||
-            accel_y != old_accel_y ||
-            accel_z != old_accel_z) {
-            LATBbits.LATB3 = !LATBbits.LATB3;
-            old_accel_x = accel_x;
-            old_accel_y = accel_y;
-            old_accel_z = accel_z;
-        }
+        // Notify end of loop cycle
+        LATBbits.LATB3 = !LATBbits.LATB3;
     }
 
     // It is recommended that the main() function does not end
