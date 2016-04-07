@@ -40,7 +40,7 @@ void main(void) {
 
     // It is recommended that the main() function does not end
     // (XC8 manual, section 5.10, page 209)
-    while(1) {
+    while (1) {
         putch('H');
         putch('e');
         putch('l');

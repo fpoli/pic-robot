@@ -1,108 +1,51 @@
 #include "mpu6050.h"
 
-void MPU6050_init_I2C(void) {
-    // set SCL1 and SDA1 pins as input
-    TRISCbits.TRISC3 = 1;
-    TRISCbits.TRISC4 = 1;
+void MPU6050_init(void) {
+    // Initialize I2C
+    printf("[MPU6050] Initializing I2C...\n");
+    I2C_init();
+    printf("[MPU6050] Testing I2C and sensor's identity...\n");
+    printf("[MPU6050] If it hangs here remove the power supply and retry.\n");
+    MPU6050_test_identity();
+    printf("[MPU6050] I2C and identity are ok\n");
 
-    // set I2C master mode with slew rate (suggested at 400 kHz)
-    SSP1CON1 = 0b00101000; 
-    SSP1STAT = 0b00000000;
-
-    // set I2C clock at 400kHz (Fosc = 32MHz)
-    // I2C clock = Fosc / (4 * (SSP1ADD + 1)
-    SSP1ADD = 19;
-
-    // reset all I2C conditions
-    SSP2CON2 = 0;
-
-    // connect
-    OpenI2C1(MASTER, SLEW_ON);
+    // Configure sensor
+    printf("[MPU6050] Configuring sensor...\n");
+    // In order to enable the FIFO buffer a "power cycle" is required
+    MPU6050_configure();
+    I2C_close();
+    I2C_init();
+    MPU6050_configure();
 }
 
 void MPU6050_configure(void) {
-    MPU6050_write_byte(SMPRT_DIV, 0b00000000);    // set sample rate divider
-    MPU6050_write_byte(FIFO_EN, 0b00000000);      // disable fifo buffer
-    MPU6050_write_byte(CONFIG, 0b00000101);       // configure low pass filter
-    MPU6050_write_byte(GYRO_CONFIG, 0b00000000);  //
-    MPU6050_write_byte(ACCEL_CONFIG, 0b00000000); //
-    MPU6050_write_byte(PWR_MGMT_2, 0b00000000);   // Enable all axis
-    MPU6050_write_byte(PWR_MGMT_1, 0b00000000);   // Disable SLEEP and CYCLE
+    // set sample rate divider
+    // sample rate = 1kHz / (1 + SMPRT_DIV)
+    //MPU6050_write_byte(SMPRT_DIV, 2u); // no uart
+    MPU6050_write_byte(SMPRT_DIV, 15u); // with uart
+    // configure low pass filter
+    MPU6050_write_byte(CONFIG, 0b00000101);
+    // configure gyro (default)
+    MPU6050_write_byte(GYRO_CONFIG, 0b00000000);
+    // configure accel (default)
+    MPU6050_write_byte(ACCEL_CONFIG, 0b00000000);
+    // enable fifo buffer for accel, gyro
+    MPU6050_write_byte(FIFO_EN, 0b01111000);
+    // enable fifo buffer
+    MPU6050_write_byte(USER_CTRL, 0b01000000);
+    // enable all axis in low power mode (default)
+    MPU6050_write_byte(PWR_MGMT_2, 0b00000000);
+    // exit from sleep, use gyro_z as clock ("highly recommended")
+    MPU6050_write_byte(PWR_MGMT_1, 0b00000011);
 }
 
-void MPU6050_write(uint8_t dst_register, uint8_t *data, uint16_t data_len) {
-    // Protocol described in data sheet, section 15.6.6.4, page 246
-    IdleI2C1();
-    StartI2C1();
-
-    IdleI2C1();
-    if (WriteI2C1(MPU6050_SLAVE_WRITE) < 0)
-        I2C_error_handler(1);
-
-    IdleI2C1();
-    if (WriteI2C1(dst_register) < 0)
-        I2C_error_handler(2);
-
-    for (uint16_t i = 0; i < data_len; ++i) {
-        IdleI2C1();
-        if (WriteI2C1(data[i]) < 0)
-            I2C_error_handler(3);
+void MPU6050_test_identity(void) {
+    int8_t identiy = MPU6050_read_byte(WHO_AM_I);
+    if (identiy != (MPU6050_SLAVE_ADDR >> 1)) {
+        error1("[MPU6050] The sensor provided a wrong identity: 0x%X\n", identiy);
     }
-
-    IdleI2C1();
-    StopI2C1();
 }
 
-void MPU6050_write_byte(uint8_t dst_register, uint8_t data) {
-    MPU6050_write(dst_register, &data, 1);
-}
-
-void MPU6050_read(uint8_t dst_register, uint8_t *data, uint16_t data_len) {
-    IdleI2C1();
-    StartI2C1();
-
-    IdleI2C1();
-    if (WriteI2C1(MPU6050_SLAVE_WRITE) < 0)
-        I2C_error_handler(3);
-
-    IdleI2C1();
-    if (WriteI2C1(dst_register) < 0)
-        I2C_error_handler(4);
-
-    IdleI2C1();
-    RestartI2C1();
-
-    IdleI2C1();
-    if (WriteI2C1(MPU6050_SLAVE_READ) < 0)
-        I2C_error_handler(5);
-
-    IdleI2C1();
-    for (uint16_t i = 0; i < data_len; ++i) {
-        if (i > 0) AckI2C1();
-        data[i] = ReadI2C1();
-    }
-
-    NotAckI2C1();
-    StopI2C1();
-}
-
-uint8_t MPU6050_read_byte(uint8_t dst_register) {
-    uint8_t data;
-    MPU6050_read(dst_register, &data, 1);
-    return data;
-}
-
-void I2C_error_handler(int16_t error) {
-    play_error();
-    printf("[MPU6050] Error %d in I2C protocol\n", error);
-    while (1);
-}
-
-void MPU6050_test_I2C(void) {
-    int8_t mpu_address = MPU6050_read_byte(WHO_AM_I);
-    if (mpu_address != 0x68) {
-        play_error();
-        printf("[MPU6050] The sensor provided a wrong address: 0x%X\n", mpu_address);
-        while (1);
-    }
+uint16_t byteswap(Data_regs data) {
+    return (((uint16_t)data.h) << 8) | data.l;
 }

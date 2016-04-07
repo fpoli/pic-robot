@@ -11,11 +11,15 @@ Project developed for the robotics course at Galilean School of Higher Education
 - Compiler: XC8 (free)
 - Libraries: PLIB
 
+Authors:
+- Federico Poli <federpoli@gmail.com>
+- Bortoli Saygashev Alexey Vladimirovic
+
 
 License (GPL v3)
 ----------------
 
-Copyright (C) 2016 Federico Poli <federpoli@gmail.com>
+Copyright (C) 2016 by the authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

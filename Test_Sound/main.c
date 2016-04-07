@@ -33,7 +33,7 @@ void main(void) {
 
     // It is recommended that the main() function does not end
     // (XC8 manual, section 5.10, page 209)
-    while(1) {
+    while (1) {
         play_sound(400 + (rand() / 65), 50);
     }
 }

@@ -31,10 +31,10 @@ void inline delay_us(uint16_t t) {
     if (t & (1 << 12)) __delay_us(1 << 12); else _delay(else_cycles);
     if (t & (1 << 13)) __delay_us(1 << 13); else _delay(else_cycles);
     if (t & (1 << 14)) __delay_us(1 << 14); else _delay(else_cycles);
-    // x 2
+    // x2
     if (t & (1 << 15)) __delay_us(1 << 14); else _delay(else_cycles);
     if (t & (1 << 15)) __delay_us(1 << 14); else _delay(else_cycles);
-#undef sistematic_error_us
+#undef overhead_us
 #undef else_cycles
 }
 
@@ -48,9 +48,8 @@ uint8_t parity(uint8_t data) {
 		data = data << 1; // go to next bit
 	}
 
-	// if num_of_ones is odd, least significant bit will be 1
-
-	return (ones & 0x01); 
+	// if 'ones' is odd, least significant bit will be 1
+	return (ones & 0x01);
 }
 
 uint16_t rand(void) {
