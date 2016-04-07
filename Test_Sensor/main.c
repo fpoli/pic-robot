@@ -35,22 +35,22 @@ void main(void) {
 
     printf("[MAIN] Start main loop\n");
     while (1) {
-        // Read buffer count
+        // Read the size of data in buffer
         MPU6050_read(FIFO_COUNT, (uint8_t*) &fifo_count, FIFO_COUNT_SIZE);
         fifo_count_value = byteswap(fifo_count);
 
-        // If there is no data, try again
+        // If there is not enough data, try again
         if (fifo_count_value < ACCEL_GYRO_REGS_SIZE) continue;
 
         if (fifo_count_value == 1024) {
             error("[MAIN] MPU6050 FIFO buffer overflow detected!\n");
         }
 
-        // Read data in buffer
+        // Read and process data from buffer
         for (uint16_t x = 0; x < fifo_count_value / ACCEL_GYRO_REGS_SIZE; ++x) {
             MPU6050_read(FIFO_R_W, (uint8_t*) &data, ACCEL_GYRO_REGS_SIZE);
 
-            // Converto data
+            // Convert to little-endian
             accel_x = byteswap(data.accel.xout);
             accel_y = byteswap(data.accel.yout);
             accel_z = byteswap(data.accel.zout);

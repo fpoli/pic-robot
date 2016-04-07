@@ -21,8 +21,8 @@ void MPU6050_init(void) {
 void MPU6050_configure(void) {
     // set sample rate divider
     // sample rate = 1kHz / (1 + SMPRT_DIV)
-    //MPU6050_write_byte(SMPRT_DIV, 2u); // no uart
-    MPU6050_write_byte(SMPRT_DIV, 15u); // with uart
+    //MPU6050_write_byte(SMPRT_DIV, 2u); // without reporting data via UART
+    MPU6050_write_byte(SMPRT_DIV, 15u);  // reporting data via UART
     // configure low pass filter
     MPU6050_write_byte(CONFIG, 0b00000101);
     // configure gyro (default)
