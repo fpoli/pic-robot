@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include "error.h"
 
-#define SLAVE_READ(addr)  ((addr) & 0b11111110)
-#define SLAVE_WRITE(addr) ((addr) | 0b00000001)
+#define SLAVE_READ(addr)  ((addr) | 0b00000001)
+#define SLAVE_WRITE(addr) ((addr) & 0b11111110)
 
 void I2C_init(void);
 void I2C_close(void);

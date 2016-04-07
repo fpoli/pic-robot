@@ -55,18 +55,18 @@ void I2C_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *data, uint16_t data
     IdleI2C1();
 
     if (WriteI2C1(SLAVE_WRITE(slave_addr)) < 0)
-        I2C_error_handler(3);
+        I2C_error_handler(4);
     IdleI2C1();
 
     if (WriteI2C1(reg_addr) < 0)
-        I2C_error_handler(4);
+        I2C_error_handler(5);
     IdleI2C1();
 
     RestartI2C1();
     IdleI2C1();
 
     if (WriteI2C1(SLAVE_READ(slave_addr)) < 0)
-        I2C_error_handler(5);
+        I2C_error_handler(6);
     IdleI2C1();
 
     for (uint16_t i = 0; i < data_len; ++i) {
