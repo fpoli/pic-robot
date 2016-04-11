@@ -12,10 +12,10 @@ void play_sound(uint16_t frequency, uint16_t duration_ms) {
 }
 
 void play_note(Note n, uint16_t period_duration_ms) {
-    const float silence = 0.3;
     if (n.frequency == 0) {
         delay_ms((uint16_t)(period_duration_ms * n.duration));
     } else {
+        const float silence = 0.3;
         play_sound(n.frequency, (uint16_t)(period_duration_ms * n.duration * (1 - silence)));
         delay_ms((uint16_t)(period_duration_ms * n.duration * silence));
     }

@@ -12,7 +12,7 @@
 void init(void) {
     // Initialize LED pin as output
     LED_TRIS = 0;
-    LED_PIN = 1
+    LED_PIN = 1;
 
     // Initialize SPEAKER pin as output
     SPEAKER_TRIS = 0;
@@ -66,7 +66,7 @@ void main(void) {
             // Calculate angles
             theta_accel = atan2((double)accel_x, (double)accel_z);
             theta_gyro = best_theta + (double)gyro_y;
-            best_theta = complementary_filter(theta_accel, theta_gyro, 0.98)
+            best_theta = complementary_filter(theta_accel, theta_gyro, 0.98);
         }
 
         // Report new data
