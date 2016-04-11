@@ -1,7 +1,8 @@
-#include <stdint.h>
 #include <xc.h>
+#include <stdint.h>
 #include <math.h>
 #include "../lib/config.h"
+#include "../lib/processing.h"
 #include "../lib/utils.h"
 #include "../lib/mpu6050.h"
 #include "../lib/error.h"
@@ -9,8 +10,12 @@
 #include "../lib/sound.h"
 
 void init(void) {
-    // Initialize LED/SOUND pin as output
-    TRISBbits.TRISB3 = 0;
+    // Initialize LED pin as output
+    LED_TRIS = 0;
+    LED_PIN = 1
+
+    // Initialize SPEAKER pin as output
+    SPEAKER_TRIS = 0;
     play_ok();
 
     // Initialize UART module
@@ -31,7 +36,7 @@ void main(void) {
     uint16_t fifo_count_value;
     int16_t accel_x, accel_y, accel_z;
     int16_t gyro_x, gyro_y, gyro_z;
-    double theta_accel, theta_gyro = 0;
+    double theta_accel, theta_gyro = 0, best_theta;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
@@ -60,7 +65,8 @@ void main(void) {
 
             // Calculate angles
             theta_accel = atan2((double)accel_x, (double)accel_z);
-            theta_gyro += (double)gyro_y;
+            theta_gyro = best_theta + (double)gyro_y;
+            best_theta = complementary_filter(theta_accel, theta_gyro, 0.98)
         }
 
         // Report new data
@@ -74,10 +80,10 @@ void main(void) {
             (int16_t)(theta_gyro * 250 / 32767 *  16 / 1000 )
         );
 
-        // Notify loop cycle
-        LATBbits.LATB3 = !LATBbits.LATB3;
+        // Blink LED to indicate activity
+        LED_PIN ^= 1;
     }
 
     // It is recommended that the main() function does not end
-    error("[MAIN] end of main() function reached");
+    error("[MAIN] End of main() function reached\n");
 }

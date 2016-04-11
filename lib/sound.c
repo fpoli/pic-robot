@@ -5,9 +5,9 @@ void play_sound(uint16_t frequency, uint16_t duration_ms) {
     uint16_t half_period = (uint16_t)(500000.0 / frequency);
     for (uint16_t x = 0; x < cycles; ++x) {
         delay_us(half_period);
-        _SOUND_OUTPUT_PIN = 0b1;
+        SPEAKER_PIN = 1;
         delay_us(half_period);
-        _SOUND_OUTPUT_PIN = 0b0;
+        SPEAKER_PIN = 0;
     }
 }
 

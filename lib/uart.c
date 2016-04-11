@@ -20,8 +20,8 @@ void uart_init(void) {
         USART_EIGHT_BIT &
         USART_CONT_RX &
         USART_BRGH_HIGH,
-        // If _XTAL_FREQ = 32MHz, _UART_BAUD = 115200 baud/s --> result is 16
-        (_XTAL_FREQ / _UART_BAUD / 16 - 1)
+        // If _XTAL_FREQ = 32MHz, UART_BAUD = 115200 baud/s --> result is 16
+        (_XTAL_FREQ / UART_BAUD / 16 - 1)
     );
 }
 

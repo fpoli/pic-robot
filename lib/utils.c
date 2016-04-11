@@ -1,6 +1,6 @@
 #include "utils.h"
 
-void inline delay_ms(uint16_t t) {
+void delay_ms(uint16_t t) {
     uint16_t cycles = t/10;
     for (uint16_t x = 0; x < cycles; ++x) {
         __delay_ms(10);
@@ -10,7 +10,7 @@ void inline delay_ms(uint16_t t) {
     }
 }
 
-void inline delay_us(uint16_t t) {
+void delay_us(uint16_t t) {
 // manually calculated looking at asm code
 #define overhead_us ((7 + 17 * 5) / 8 + 1)
 // balance the main & else branches, so that the overhead is the same
@@ -54,7 +54,7 @@ uint8_t parity(uint8_t data) {
 
 uint16_t rand(void) {
     static uint16_t lfsr = 0xACE1;
-    static bit flag = 0;
+    static bool flag = 0;
 
     flag = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
     return lfsr = (lfsr >> 1) | (flag << 15);

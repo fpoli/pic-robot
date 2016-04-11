@@ -5,6 +5,10 @@
 #include "config.h"
 #include "utils.h"
 
+#ifndef SPEAKER_PIN
+#error "sound.h library requires the definition of SPEAKER_PIN"
+#endif
+
 typedef struct {
     uint16_t frequency;  // Hertz
     float    duration;   // fraction of period
@@ -16,10 +20,6 @@ typedef struct {
     uint16_t period;  // duration of period (ms)
 } Melody;
 
-#ifndef _SOUND_OUTPUT_PIN
-#error "play_sound() requires the definition of _SOUND_OUTPUT_PIN"
-#endif
-
 void play_sound(uint16_t, uint16_t);
 
 void play_note(Note, uint16_t);
@@ -30,7 +30,7 @@ void play_melody(const Note*, uint16_t, uint16_t);
  * Transmit bits (starting from the most relevant) playing dot & dashes
  * 0 = dot, led on for a short time
  * 1 = dash, led on for a long time
- * 
+ *
  * es. 0b10111001 --> dot, dash, dot, dot, dot, dash, dash, dot.
  */
 void play_dot_dash_data(uint16_t data, uint16_t duration_ms);

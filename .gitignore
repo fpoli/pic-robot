@@ -1,3 +1,6 @@
+*.o
+main_test
+
 *~
 build/
 dist/

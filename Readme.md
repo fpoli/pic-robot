@@ -6,10 +6,12 @@ Firmware source code of a self-balancing robot.
 Project developed for the robotics course at Galilean School of Higher Education (Padova, Italy).
 
 - Microcontroller: PIC18F45K22
+- Sensor: MPU-6050
 - Board: "Ready for PIC"
 - IDE: MPLAB
 - Compiler: XC8 (free)
 - Libraries: PLIB
+- Testing framework: Google Test (just a few unit test)
 
 Authors:
 - Federico Poli <federpoli@gmail.com>
