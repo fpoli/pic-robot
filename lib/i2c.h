@@ -1,5 +1,5 @@
-#ifndef I2C_H
-#define	I2C_H
+#ifndef LIB_I2C_H_
+#define LIB_I2C_H_
 
 #include <i2c.h>
 #include <stdint.h>
@@ -19,4 +19,4 @@ uint8_t I2C_read_byte(uint8_t slave_addr, uint8_t reg_addr);
 
 void I2C_error_handler(int16_t error);
 
-#endif	/* I2C_H */
+#endif  // LIB_I2C_H_

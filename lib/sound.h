@@ -1,5 +1,5 @@
-#ifndef SOUND_H
-#define	SOUND_H
+#ifndef LIB_SOUND_H_
+#define LIB_SOUND_H_
 
 #include <stdint.h>
 #include "config.h"
@@ -130,4 +130,4 @@ void play_error(void);
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
 
-#endif	/* SOUND_H */
+#endif  // LIB_SOUND_H_

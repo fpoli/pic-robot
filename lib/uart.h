@@ -1,5 +1,5 @@
-#ifndef UART_H
-#define	UART_H
+#ifndef LIB_UART_H_
+#define LIB_UART_H_
 
 #include <stdint.h>
 #include <stdio.h>
@@ -17,4 +17,4 @@ void uart_write_byte(uint8_t data);
 
 void putch(uint8_t data);
 
-#endif	/* UART_H */
+#endif  // LIB_UART_H_

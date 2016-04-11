@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef LIB_CONFIG_H_
+#define LIB_CONFIG_H_
 
 // Frequency of the clock used by __delay_ms()
 #define _XTAL_FREQ 32000000
@@ -17,4 +17,4 @@
 // NOTE: Configuration bits are not writable in order to protect the bootloader.
 // So, it is useless to set them
 
-#endif  /* CONFIG_H */
+#endif  // LIB_CONFIG_H_

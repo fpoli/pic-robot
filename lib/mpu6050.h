@@ -1,5 +1,5 @@
-#ifndef MPU6050_H
-#define	MPU6050_H
+#ifndef LIB_MPU6050_H_
+#define LIB_MPU6050_H_
 
 #include <stdint.h>
 #include "i2c.h"
@@ -92,4 +92,4 @@ uint16_t byteswap(Data_regs data);
 #define MPU6050_read(a, b, c)    I2C_read(MPU6050_SLAVE_ADDR, a, b, c)
 #define MPU6050_read_byte(a)  I2C_read_byte(MPU6050_SLAVE_ADDR, a)
 
-#endif	/* MPU6050_H */
+#endif  // LIB_MPU6050_H_

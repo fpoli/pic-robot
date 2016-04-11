@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define	UTILS_H
+#ifndef LIB_UTILS_H_
+#define LIB_UTILS_H_
 
 #include <xc.h>
 #include <stdint.h>
@@ -16,4 +16,4 @@ uint16_t rand(void);
 
 #define RAND_MAX 65535
 
-#endif	/* UTILS_H */
+#endif  // LIB_UTILS_H_

@@ -1,5 +1,5 @@
-#ifndef MELODY_H
-#define	MELODY_H
+#ifndef LIB_MELODIES_H_
+#define LIB_MELODIES_H_
 
 #include <stdint.h>
 #include "config.h"
@@ -9,4 +9,4 @@ Melody get_imperial_march_melody(void);
 
 Melody get_happy_birthday_melody(void);
 
-#endif	/* MELODY_H */
+#endif  // LIB_MELODIES_H_

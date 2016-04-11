@@ -1,5 +1,5 @@
-#ifndef MOTOR_H
-#define MOTOR_H
+#ifndef LIB_MOTOR_H_
+#define LIB_MOTOR_H_
 
 #include <xc.h>
 #include <stdint.h>
@@ -14,4 +14,4 @@ void motor_set_dir(uint8_t);
 #define DIR_OFF           0b00
 #define DIR_WASTE_BATTERY 0b11
 
-#endif
+#endif  // LIB_MOTOR_H_

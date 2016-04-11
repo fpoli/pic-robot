@@ -2,10 +2,10 @@
 
 void uart_init(void) {
     // Initialize UART module
-    TRISCbits.RC6 = 1; // TX pin set as output
-    TRISCbits.RC7 = 1; // RX pin set as input
-    ANSELCbits.ANSC6 = 0; // Disable analog input
-    ANSELCbits.ANSC7 = 0; // Disable analog input
+    TRISCbits.RC6 = 1;  // TX pin set as output
+    TRISCbits.RC7 = 1;  // RX pin set as input
+    ANSELCbits.ANSC6 = 0;  // Disable analog input
+    ANSELCbits.ANSC7 = 0;  // Disable analog input
 
     Close1USART();
     baud1USART(
@@ -26,7 +26,7 @@ void uart_init(void) {
 }
 
 void uart_write_byte(uint8_t data) {
-    while(Busy1USART());
+    while (Busy1USART()) continue;
     putc1USART(data);
 }
 

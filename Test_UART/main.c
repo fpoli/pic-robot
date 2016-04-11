@@ -11,10 +11,10 @@ void init(void) {
     TRISBbits.TRISB3 = 0;  // output
 
     // Initialize UART module
-    TRISCbits.RC6 = 1; // TX pin set as output
-    TRISCbits.RC7 = 1; // RX pin set as input
-    ANSELCbits.ANSC6 = 0; // Disable analog input
-    ANSELCbits.ANSC7 = 0; // Disable analog input
+    TRISCbits.RC6 = 1;  // TX pin set as output
+    TRISCbits.RC7 = 1;  // RX pin set as input
+    ANSELCbits.ANSC6 = 0;  // Disable analog input
+    ANSELCbits.ANSC7 = 0;  // Disable analog input
 
     Close1USART();
     baud1USART(

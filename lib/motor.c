@@ -24,8 +24,8 @@ void motor_init(void) {
 
 void motor_set_pwm(uint16_t power) {
     // Set PWM pulse width bits (10 bit resolution)
-    CCPR4L = power >> 2; // 8 bit here
-    CCP4CONbits.DC4B = power % 4; // 2 bit here
+    CCPR4L = power >> 2;  // 8 bit here
+    CCP4CONbits.DC4B = power % 4;  // 2 bit here
 
     // Enable
     TRISD = 0;

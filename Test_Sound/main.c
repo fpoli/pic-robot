@@ -15,7 +15,7 @@ void init(void) {
 void main(void) {
     init();
 
-    LATBbits.LATB3 = 0b1; // LED on
+    LATBbits.LATB3 = 0b1;  // LED on
 
     play_sound(220,  1000);
     play_sound(440,  1000);
