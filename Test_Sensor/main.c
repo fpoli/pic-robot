@@ -63,9 +63,10 @@ void main(void) {
             gyro_y = byteswap(data.gyro.yout);
             gyro_z = byteswap(data.gyro.zout);
 
-            // Calculate angles
+            // Calculate angles (rad)
             theta_accel = atan2((double)accel_x, (double)accel_z);
-            theta_gyro = best_theta + (double)gyro_y;
+            gyro_angvel = (double)gyro_y * (250 / 180 * M_PI) / 32767;
+            theta_gyro = best_theta + gyro_angvel * (16 / 1000);
             best_theta = complementary_filter(theta_accel, theta_gyro, 0.98);
         }
 
@@ -75,9 +76,12 @@ void main(void) {
             accel_x, accel_y, accel_z,
             (int16_t)(theta_accel / M_PI * 180)
         );
-        printf("gyro: %+6d, %+6d, %+6d  tetha_gyro: %+6d°\n",
+        printf("gyro: %+6d, %+6d, %+6d  theta_gyro: %+6d°  ",
             gyro_x, gyro_y, gyro_z,
-            (int16_t)(theta_gyro * 250 / 32767 *  16 / 1000 )
+            (int16_t)(theta_gyro / M_PI * 180)
+        );
+        printf("best_theta: %+6d°\n",
+            (int16_t)(best_theta / M_PI * 180)
         );
 
         // Blink LED to indicate activity
