@@ -65,8 +65,7 @@ void main(void) {
             gyro_y = byteswap(data.gyro.yout);
             gyro_z = byteswap(data.gyro.zout);
 
-            // Calculate angles (rad) using a complementary filter:
-            // low-pass on accelerometer data, high-pass on gyroscope data
+            // Calculate angles (rad) using a "complementary filter"
             theta_accel = atan2((float)accel_y, (float)accel_z);
             rotation_gyro = (float)gyro_x * GYRO_SCALE_RAD * SENSOR_DT;
             theta_gyro = theta_gyro + rotation_gyro;
@@ -82,16 +81,16 @@ void main(void) {
         }
 
         // Report new data
-        printf("%4d   ", fifo_count_value);
-        printf("%+6d %+6d %+6d  %+6d   ",
+        printf("fifo_count: %4d   ", fifo_count_value);
+        printf("accel: %+6d %+6d %+6d  theta_accel: %+6d   ",
             accel_x, accel_y, accel_z,
             (int16_t)(theta_accel * 180 / M_PI)
         );
-        printf("%+6d %+6d %+6d  %+6d   ",
+        printf("gyro: %+6d %+6d %+6d  theta_gyro: %+6d   ",
             gyro_x, gyro_y, gyro_z,
             (int16_t)(theta_gyro * 180 / M_PI)
         );
-        printf("%+6d\n",
+        printf("best_theta: %+6d\n",
             (int16_t)(best_theta * 180 / M_PI)
         );
 
