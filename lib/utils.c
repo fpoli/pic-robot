@@ -59,3 +59,15 @@ uint16_t rand(void) {
     flag = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
     return lfsr = (lfsr >> 1) | (flag << 15);
 }
+
+float clampf(float value, float min, float max) {
+    if (value <= min) return min;
+    if (value >= max) return max;
+    return value;
+}
+
+uint16_t clamp(uint16_t value, uint16_t min, uint16_t max) {
+    if (value <= min) return min;
+    if (value >= max) return max;
+    return value;
+}

@@ -14,6 +14,14 @@
 #define LED_PIN LATBbits.LATB3
 #define LED_TRIS LATBbits.LATB3
 
+#define DEBUG
+
+#ifdef DEBUG
+    #define MPU6050_SMPRT_DIV_VALUE 15
+#else
+    #define MPU6050_SMPRT_DIV_VALUE 2
+#endif
+
 // NOTE: Configuration bits are not writable in order to protect the bootloader.
 // So, it is useless to set them
 

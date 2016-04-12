@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define ERROR_QUEUE_SIZE 128
+#define PID_ERROR_HISTORY_SIZE 128
 
 void pid_reset(void);
 

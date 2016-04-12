@@ -16,4 +16,8 @@ uint16_t rand(void);
 
 #define RAND_MAX 65535
 
+float clampf(float value, float min, float max);
+
+uint16_t clamp(uint16_t value, uint16_t min, uint16_t max);
+
 #endif  // LIB_UTILS_H_

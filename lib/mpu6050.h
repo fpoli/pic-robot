@@ -81,13 +81,18 @@ typedef struct {
 } Accel_gyro_regs;
 #define ACCEL_GYRO_REGS_SIZE 12
 
-#define SMPRT_DIV_VALUE 15  // 15 for debugging, 2 for production
-#define SENSOR_HZ (1000.0 / (1.0 + SMPRT_DIV_VALUE))
-#define SENSOR_DT ((1.0 + SMPRT_DIV_VALUE) / 1000.0)
+
+#ifndef MPU6050_SMPRT_DIV_VALUE
+#error "mpu6050.h library requires the definition of MPU6050_SMPRT_DIV_VALUE"
+#endif
+
+#define SENSOR_HZ (1000.0 / (1.0 + MPU6050_SMPRT_DIV_VALUE))
+#define SENSOR_DT ((1.0 + MPU6050_SMPRT_DIV_VALUE) / 1000.0)
 #define ACCEL_SCALE_G (1.0 / 32768.0)
 #define GYRO_SCALE_RAD ((250.0 / 32768.0) * (M_PI / 180.0))
 
 void MPU6050_init(void);
+
 void MPU6050_configure(void);
 
 void MPU6050_test_identity(void);

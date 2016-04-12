@@ -1,15 +1,15 @@
 #include "pid.h"
 
 // Circular queue
-float error_queue[ERROR_QUEUE_SIZE] = { 0 };
+float error_queue[PID_ERROR_HISTORY_SIZE] = { 0 };
 uint16_t error_queue_top = 0;
 float error_queue_sum = 0;
 
-#define QUEUE_NEXT(i) ((i + ERROR_QUEUE_SIZE + 1) % ERROR_QUEUE_SIZE)
-#define QUEUE_PREV(i) ((i + ERROR_QUEUE_SIZE - 1) % ERROR_QUEUE_SIZE)
+#define Q_NEXT(i) ((i + PID_ERROR_HISTORY_SIZE + 1) % PID_ERROR_HISTORY_SIZE)
+#define Q_PREV(i) ((i + PID_ERROR_HISTORY_SIZE - 1) % PID_ERROR_HISTORY_SIZE)
 
 void pid_reset(void) {
-    for (uint16_t i = 0; i < ERROR_QUEUE_SIZE; ++i) {
+    for (uint16_t i = 0; i < PID_ERROR_HISTORY_SIZE; ++i) {
         error_queue[i] = 0;
     }
     error_queue_top = 0;
@@ -25,7 +25,7 @@ float pid(float current, float target, float kp, float ki, float kd) {
     tp = kp * error;
 
     // Integral
-    error_queue_top = QUEUE_NEXT(error_queue_top);
+    error_queue_top = Q_NEXT(error_queue_top);
     error_queue_sum -= error_queue[error_queue_top];
     error_queue[error_queue_top] = error;
     error_queue_sum += error;
@@ -33,7 +33,7 @@ float pid(float current, float target, float kp, float ki, float kd) {
     ti = ki * error_queue_sum;
 
     // Derivative
-    derivate = error_queue[QUEUE_PREV(error_queue_top)] - error;
+    derivate = error_queue[Q_PREV(error_queue_top)] - error;
 
     td = kd * derivate;
 

@@ -84,12 +84,14 @@ void main(void) {
         // PID control
         reaction = pid(best_theta, 0, 0.5, 0.5, 0.5);
 
-        // Report data
-        printf("%4d   ", fifo_count_value);
-        printf("%+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
-        printf("%+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
-        printf("%+6d  ", (int16_t)(best_theta * 180 / M_PI));
-        printf("%+6d\n", (int16_t)(reaction));
+        #ifdef DEBUG
+            // Report data
+            printf("%4d   ", fifo_count_value);
+            printf("%+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
+            printf("%+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
+            printf("%+6d  ", (int16_t)(best_theta * 1800 / M_PI));
+            printf("%+6d\n", (int16_t)(reaction));
+        #endif
 
         // Blink LED to indicate activity
         LED_PIN ^= 1;
