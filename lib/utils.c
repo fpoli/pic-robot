@@ -41,11 +41,11 @@ void delay_us(uint16_t t) {
 uint8_t parity(uint8_t data) {
     uint8_t ones = 0;
 
-    while (data != 0) { // until all bits tested
-        if(data & 0x01) { // if bit is 1
+    while (data != 0) {  // until all bits tested
+        if (data & 0x01) {  // if bit is 1
             ones++;
         }
-        data = data << 1; // go to next bit
+        data = data << 1;  // go to next bit
     }
 
     // if 'ones' is odd, least significant bit will be 1

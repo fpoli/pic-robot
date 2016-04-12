@@ -1,8 +1,9 @@
 #include <xc.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <math.h>
 #include "../lib/config.h"
-#include "../lib/processing.h"
+#include "../lib/pid.h"
 #include "../lib/utils.h"
 #include "../lib/mpu6050.h"
 #include "../lib/error.h"
@@ -36,7 +37,8 @@ void main(void) {
     uint16_t fifo_count_value;
     int16_t accel_x, accel_y, accel_z;
     int16_t gyro_x, gyro_y, gyro_z;
-    double theta_accel, theta_gyro = 0, best_theta;
+    float theta_accel, theta_gyro = 0, rotation_gyro, best_theta = 0;
+    bool best_theta_available = false;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
@@ -63,25 +65,34 @@ void main(void) {
             gyro_y = byteswap(data.gyro.yout);
             gyro_z = byteswap(data.gyro.zout);
 
-            // Calculate angles (rad)
-            theta_accel = atan2((double)accel_x, (double)accel_z);
-            gyro_angvel = (double)gyro_y * (250 / 180 * M_PI) / 32767;
-            theta_gyro = best_theta + gyro_angvel * (16 / 1000);
-            best_theta = complementary_filter(theta_accel, theta_gyro, 0.98);
+            // Calculate angles (rad) using a complementary filter:
+            // low-pass on accelerometer data, high-pass on gyroscope data
+            theta_accel = atan2((float)accel_y, (float)accel_z);
+            rotation_gyro = (float)gyro_x * GYRO_SCALE_RAD * SENSOR_DT;
+            theta_gyro = theta_gyro + rotation_gyro;
+
+            if (best_theta_available) {
+                best_theta =
+                    0.98 * (best_theta + rotation_gyro) +
+                    0.02 * theta_accel;
+            } else {
+                best_theta = theta_accel;
+                best_theta_available = true;
+            }
         }
 
         // Report new data
-        printf("fifo count: %4d  ", fifo_count_value);
-        printf("accel: %+6d, %+6d, %+6d  tetha_accel: %+6d°  ",
+        printf("%4d   ", fifo_count_value);
+        printf("%+6d %+6d %+6d  %+6d   ",
             accel_x, accel_y, accel_z,
-            (int16_t)(theta_accel / M_PI * 180)
+            (int16_t)(theta_accel * 180 / M_PI)
         );
-        printf("gyro: %+6d, %+6d, %+6d  theta_gyro: %+6d°  ",
+        printf("%+6d %+6d %+6d  %+6d   ",
             gyro_x, gyro_y, gyro_z,
-            (int16_t)(theta_gyro / M_PI * 180)
+            (int16_t)(theta_gyro * 180 / M_PI)
         );
-        printf("best_theta: %+6d°\n",
-            (int16_t)(best_theta / M_PI * 180)
+        printf("%+6d\n",
+            (int16_t)(best_theta * 180 / M_PI)
         );
 
         // Blink LED to indicate activity

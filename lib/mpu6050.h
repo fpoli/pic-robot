@@ -2,6 +2,7 @@
 #define LIB_MPU6050_H_
 
 #include <stdint.h>
+#include <math.h>
 #include "i2c.h"
 #include "error.h"
 
@@ -79,6 +80,12 @@ typedef struct {
     Gyro_regs gyro;
 } Accel_gyro_regs;
 #define ACCEL_GYRO_REGS_SIZE 12
+
+#define SMPRT_DIV_VALUE 15  // 15 for debugging, 2 for production
+#define SENSOR_HZ (1000.0 / (1.0 + SMPRT_DIV_VALUE))
+#define SENSOR_DT ((1.0 + SMPRT_DIV_VALUE) / 1000.0)
+#define ACCEL_SCALE_G (1.0 / 32768.0)
+#define GYRO_SCALE_RAD ((250.0 / 32768.0) * (M_PI / 180.0))
 
 void MPU6050_init(void);
 void MPU6050_configure(void);

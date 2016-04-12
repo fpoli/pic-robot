@@ -1,9 +1,12 @@
-#include "processing.h"
+#include "pid.h"
 
-// circular queue
+// Circular queue
 float error_queue[ERROR_QUEUE_SIZE] = { 0 };
 uint16_t error_queue_top = 0;
 float error_queue_sum = 0;
+
+#define QUEUE_NEXT(i) ((i + ERROR_QUEUE_SIZE + 1) % ERROR_QUEUE_SIZE)
+#define QUEUE_PREV(i) ((i + ERROR_QUEUE_SIZE - 1) % ERROR_QUEUE_SIZE)
 
 void pid_reset(void) {
     for (uint16_t i = 0; i < ERROR_QUEUE_SIZE; ++i) {

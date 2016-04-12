@@ -1,4 +1,4 @@
-#include "../lib/processing.c"
+#include "../lib/pid.c"
 #include <gtest/gtest.h>
 
 TEST(PidTest, ResetWorks) {

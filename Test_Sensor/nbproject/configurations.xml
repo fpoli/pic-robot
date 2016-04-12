@@ -18,6 +18,8 @@
       <itemPath>../lib/error.h</itemPath>
       <itemPath>../lib/i2c.c</itemPath>
       <itemPath>../lib/i2c.h</itemPath>
+      <itemPath>../lib/pid.c</itemPath>
+      <itemPath>../lib/pid.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
