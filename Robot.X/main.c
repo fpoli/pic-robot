@@ -86,11 +86,11 @@ void main(void) {
 
         #ifdef DEBUG
             // Report data
-            printf("%4d   ", fifo_count_value);
-            printf("%+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
-            printf("%+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
-            printf("%+6d  ", (int16_t)(best_theta * 1800 / M_PI));
-            printf("%+6d\n", (int16_t)(reaction));
+            printf("fifo count: %4d   ", fifo_count_value);
+            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
+            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
+            printf("best_theta: %+6d  ", (int16_t)(best_theta * 1800 / M_PI));
+            printf("reaction: %+6d\n", (int16_t)(reaction));
         #endif
 
         // Blink LED to indicate activity

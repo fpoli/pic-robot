@@ -12,6 +12,7 @@
 #define ACCEL_CONFIG 0x1C
 #define FIFO_EN      0x23
 #define INT_STATUS   0x3A
+#define ACCEL_REGS   0x3B
 #define ACCEL_XOUT_H 0x3B
 #define ACCEL_XOUT_L 0x3C
 #define ACCEL_YOUT_H 0x3D
@@ -35,10 +36,11 @@
 #define FIFO_R_W     0x74
 #define WHO_AM_I     0x75
 
-#define MPU6050_SLAVE_ADDR 0b11010000
-
 #define INT_STATUS_FIFO_OFLOW_INT 0b00010000
 #define INT_STATUS_DATA_RDY_INT   0b00000001
+
+#define MPU6050_SLAVE_ADDR 0b11010000
+
 
 typedef struct {
     uint8_t h;
@@ -47,7 +49,6 @@ typedef struct {
 
 #define FIFO_COUNT 0x72
 #define FIFO_COUNT_SIZE 2
-
 #define TEMP_REGS 0x41
 #define TEMP_REGS_SIZE 2
 
@@ -56,7 +57,7 @@ typedef struct {
     Data_regs yout;
     Data_regs zout;
 } Accel_regs;
-#define ACCEL_REGS 0x3B
+
 #define ACCEL_REGS_SIZE 6
 
 typedef struct {
@@ -64,6 +65,7 @@ typedef struct {
     Data_regs yout;
     Data_regs zout;
 } Gyro_regs;
+
 #define GYRO_REGS 0x43
 #define GYRO_REGS_SIZE 6
 
@@ -72,6 +74,7 @@ typedef struct {
     Data_regs temp;
     Gyro_regs gyro;
 } Sensor_regs;
+
 #define SENSOR_REGS 0x3B
 #define SENSOR_REGS_SIZE 14
 
@@ -79,15 +82,18 @@ typedef struct {
     Accel_regs accel;
     Gyro_regs gyro;
 } Accel_gyro_regs;
+
 #define ACCEL_GYRO_REGS_SIZE 12
 
 
-#ifndef MPU6050_SMPRT_DIV_VALUE
-#error "mpu6050.h library requires the definition of MPU6050_SMPRT_DIV_VALUE"
+#ifdef DEBUG
+#define SMPRT_DIV_VALUE 15
+#else
+#define SMPRT_DIV_VALUE 2
 #endif
 
-#define SENSOR_HZ (1000.0 / (1.0 + MPU6050_SMPRT_DIV_VALUE))
-#define SENSOR_DT ((1.0 + MPU6050_SMPRT_DIV_VALUE) / 1000.0)
+#define SENSOR_HZ (1000.0 / (1.0 + SMPRT_DIV_VALUE))
+#define SENSOR_DT ((1.0 + SMPRT_DIV_VALUE) / 1000.0)
 #define ACCEL_SCALE_G (1.0 / 32768.0)
 #define GYRO_SCALE_RAD ((250.0 / 32768.0) * (M_PI / 180.0))
 
