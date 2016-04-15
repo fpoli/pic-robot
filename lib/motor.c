@@ -2,6 +2,8 @@
 
 void motor_init(void) {
     // Using port D, RD1 pin for PWM
+    // Clear port D
+    PORTD = 0;
     TRISD = 0;
     // Timer initialization
     T2CON = 0b00000100;
@@ -15,6 +17,8 @@ void motor_init(void) {
     CCP4CONbits.DC4B = 0b11;
     // Enable PWM
     TRISDbits.RD1 = 0;
+    // Set standby pin up
+    TRISEbits.RE0 = 0;
 
     // Left for digital pins setup (if needed)
 
@@ -28,15 +32,20 @@ void motor_set_pwm(uint16_t power) {
     CCP4CONbits.DC4B = power % 4;  // 2 bit here
 
     // Enable
-    TRISD = 0;
+    TRISDbits.RD1 = 0;
 }
 
 void motor_set_dir(uint8_t dir) {
     // Using port D, RD2, RD3 pin for PWM
     // Low  dir bit sets RD2
     // High dir bit sets RD3
-    LATDbits.LATD3 = dir % 2;
-    LATDbits.LATD2 = (dir >> 1) % 2;
-    PORTDbits.RD3 = 0;
-    PORTDbits.RD2 = 0;
+    LATDbits.LATD3 = (dir >> 1) % 2;
+    LATDbits.LATD2 = dir % 2;
+    // Setto lo standby
+    LATEbits.LATE0 = 1;
+    // Enable options
+    TRISDbits.RD2 = 0;
+    TRISDbits.RD3 = 0;
+    // Enable standby (redundant way)
+    TRISEbits.RE0 = 0;
 }

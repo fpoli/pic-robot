@@ -7,6 +7,7 @@
 void motor_init(void);
 
 void motor_set_pwm(uint16_t);
+
 void motor_set_dir(uint8_t);
 
 #define DIR_FORWARD       0b01
