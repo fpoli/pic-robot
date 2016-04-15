@@ -9,6 +9,7 @@
 #include "../lib/error.h"
 #include "../lib/uart.h"
 #include "../lib/sound.h"
+#include "../lib/motor.h"
 
 void init(void) {
     // Initialize LED pin as output
@@ -27,6 +28,10 @@ void init(void) {
     // Initialize I2C and MPU6050
     MPU6050_init();
     printf("[INIT] MPU6050 initialized\n");
+
+    // Initialize motor driver
+    motor_init();
+    printf("[INIT] Motor driver initialized\n");
 }
 
 void main(void) {
@@ -40,6 +45,7 @@ void main(void) {
     float theta_accel, theta_gyro = 0, rotation_gyro, best_theta = 0;
     bool best_theta_available = false;
     float reaction;
+    uint16_t power;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
@@ -66,15 +72,15 @@ void main(void) {
             gyro_y = byteswap(data.gyro.yout);
             gyro_z = byteswap(data.gyro.zout);
 
-            // Calculate angles (rad) using a "complementary filter"
+            // Calculate angle (rad) by combining sensory data
             theta_accel = atan2((float)accel_y, (float)accel_z);
             rotation_gyro = (float)gyro_x * GYRO_SCALE_RAD * SENSOR_DT;
             theta_gyro = theta_gyro + rotation_gyro;
 
             if (best_theta_available) {
                 best_theta =
-                    0.98 * (best_theta + rotation_gyro) +
-                    0.02 * theta_accel;
+                    0.9 * (best_theta + rotation_gyro) +
+                    0.1 * theta_accel;
             } else {
                 best_theta = theta_accel;
                 best_theta_available = true;
@@ -84,13 +90,18 @@ void main(void) {
         // PID control
         reaction = pid(best_theta, 0, 0.5, 0.5, 0.5);
 
+        // Set motor power and direction
+        power = clamp((uint16_t)fabs(round(reaction)), 0, 1023);
+        motor_set_pwm(power);
+        motor_set_dir(reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
+
         #ifdef DEBUG
             // Report data
             printf("fifo count: %4d   ", fifo_count_value);
             printf("theta_accel: %+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
             printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
             printf("best_theta: %+6d  ", (int16_t)(best_theta * 1800 / M_PI));
-            printf("reaction: %+6d\n", (int16_t)(reaction));
+            printf("reaction: %+6d --> %4u\n", (int16_t)(reaction), power);
         #endif
 
         // Blink LED to indicate activity

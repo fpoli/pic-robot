@@ -1,5 +1,5 @@
-PIC Robot
-=========
+Self-balancing robot
+====================
 
 [![Build Status](https://travis-ci.org/fpoli/pic-robot.svg?branch=master)](https://travis-ci.org/fpoli/pic-robot)
 

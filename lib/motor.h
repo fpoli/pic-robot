@@ -4,15 +4,18 @@
 #include <xc.h>
 #include <stdint.h>
 
-void motor_init(void);
-
-void motor_set_pwm(uint16_t);
-
-void motor_set_dir(uint8_t);
+#define STANDBY_TRIS TRISEbits.RE0
+#define STANDBY_PIN  LATEbits.LATE0
 
 #define DIR_FORWARD       0b01
 #define DIR_REVERSED      0b10
 #define DIR_OFF           0b00
 #define DIR_WASTE_BATTERY 0b11
+
+void motor_init(void);
+
+void motor_set_pwm(uint16_t);
+
+void motor_set_dir(uint8_t);
 
 #endif  // LIB_MOTOR_H_

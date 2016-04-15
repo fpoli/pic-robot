@@ -20,6 +20,8 @@
       <itemPath>../lib/i2c.h</itemPath>
       <itemPath>../lib/pid.c</itemPath>
       <itemPath>../lib/pid.h</itemPath>
+      <itemPath>../lib/motor.c</itemPath>
+      <itemPath>../lib/motor.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -112,7 +114,7 @@
         <property key="calibrate-oscillator-value" value="0x3400"/>
         <property key="clear-bss" value="true"/>
         <property key="code-model-external" value="wordwrite"/>
-        <property key="code-model-rom" value="0-2200"/>
+        <property key="code-model-rom" value="0-2700"/>
         <property key="create-html-files" value="false"/>
         <property key="data-model-ram" value=""/>
         <property key="data-model-size-of-double" value="24"/>
