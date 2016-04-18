@@ -24,14 +24,16 @@ void init(void) {
     uart_init();
     printf("\n");
     printf("[INIT] UART module initialized\n");
-
-    // Initialize I2C and MPU6050
-    MPU6050_init();
-    printf("[INIT] MPU6050 initialized\n");
+    play_ok();
 
     // Initialize motor driver
     motor_init();
     printf("[INIT] Motor driver initialized\n");
+    play_ok();
+
+    // Initialize I2C and MPU6050
+    MPU6050_init();
+    printf("[INIT] MPU6050 initialized\n");
 }
 
 void main(void) {
@@ -92,8 +94,8 @@ void main(void) {
 
         // Set motor power and direction
         power = clamp((uint16_t)fabs(round(reaction)), 0, 1023);
-        motor_set_pwm(power);
-        motor_set_dir(reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
+        motor_set_pwm(500);
+        motor_set_dir(best_theta >= 0 ? DIR_REVERSED : DIR_FORWARD);
 
         #ifdef DEBUG
             // Report data

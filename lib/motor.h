@@ -4,9 +4,6 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define STANDBY_TRIS TRISEbits.RE0
-#define STANDBY_PIN  LATEbits.LATE0
-
 #define DIR_FORWARD       0b01
 #define DIR_REVERSED      0b10
 #define DIR_OFF           0b00
