@@ -90,12 +90,12 @@ void main(void) {
         }
 
         // PID control
-        reaction = pid(best_theta, 0, 0.5, 0.5, 0.5);
+        reaction = pid(best_theta, 0, 1000.0, 0, 0);
 
         // Set motor power and direction
         power = clamp((uint16_t)fabs(round(reaction)), 0, 1023);
-        motor_set_pwm(500);
-        motor_set_dir(best_theta >= 0 ? DIR_REVERSED : DIR_FORWARD);
+        motor_set_pwm(power);
+        motor_set_dir(reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
 
         #ifdef DEBUG
             // Report data
