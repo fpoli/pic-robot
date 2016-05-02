@@ -25,22 +25,22 @@ float pid_get_fitness(void);
 #define PREV_MOD(i, mod) (((i) + (mod) - 1) % (mod))
 
 typedef struct {
-	// PID parameters
-	float sampling_freq;
-	float target;
-	float offset;
-	float kp;
-	float ki;
-	float kd;
-	// Integral
-	float error_hist[PID_ERROR_HISTORY_SIZE];
-	uint16_t error_hist_top;
-	float error_hist_sum;
-	// Fitness
-	uint16_t fitness_hist_size;
-	float fitness_hist_sq_sum;
-	float fitness;
-	bool fitness_ready;
+    // PID parameters
+    float sampling_freq;
+    float target;
+    float offset;
+    float kp;
+    float ki;
+    float kd;
+    // Integral
+    float error_hist[PID_ERROR_HISTORY_SIZE];
+    uint16_t error_hist_top;
+    float error_hist_sum;
+    // Fitness
+    uint16_t fitness_hist_size;
+    float fitness_hist_sq_sum;
+    float fitness;
+    bool fitness_ready;
 } Pid_state;
 
 #endif  // LIB_PID_H_

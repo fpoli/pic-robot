@@ -106,19 +106,19 @@ TEST(PidTest, ProportionalSignIsOk) {
     pid_set_parameters(1, 0, 0);
 
     pid_set_target(0);
-    ASSERT_TRUE(pid_update(555) < 0);
+    ASSERT_LT(pid_update(555), 0);
 
     pid_reset_error_history();
     pid_set_target(0);
-    ASSERT_TRUE(pid_update(-555) > 0);
+    ASSERT_GT(pid_update(-555), 0);
 
     pid_reset_error_history();
     pid_set_target(555);
-    ASSERT_TRUE(pid_update(0) > 0);
+    ASSERT_GT(pid_update(0), 0);
 
     pid_reset_error_history();
     pid_set_target(-555);
-    ASSERT_TRUE(pid_update(0) < 0);
+    ASSERT_LT(pid_update(0), 0);
 }
 
 TEST(PidTest, IntegralSignIsOk) {
@@ -126,19 +126,19 @@ TEST(PidTest, IntegralSignIsOk) {
     pid_set_parameters(0, 1, 0);
 
     pid_set_target(0);
-    ASSERT_TRUE(pid_update(555) < 0);
+    ASSERT_LT(pid_update(555), 0);
 
     pid_reset_error_history();
     pid_set_target(0);
-    ASSERT_TRUE(pid_update(-555) > 0);
+    ASSERT_GT(pid_update(-555), 0);
 
     pid_reset_error_history();
     pid_set_target(555);
-    ASSERT_TRUE(pid_update(0) > 0);
+    ASSERT_GT(pid_update(0), 0);
 
     pid_reset_error_history();
     pid_set_target(-555);
-    ASSERT_TRUE(pid_update(0) < 0);
+    ASSERT_LT(pid_update(0), 0);
 }
 
 TEST(PidTest, DerivativeSignIsOk) {
@@ -146,22 +146,22 @@ TEST(PidTest, DerivativeSignIsOk) {
     pid_set_parameters(0, 0, 1);
 
     pid_set_target(111);
-    ASSERT_TRUE(pid_update(555) < 0);
+    ASSERT_LT(pid_update(555), 0);
 
     pid_reset_error_history();
     pid_set_target(0);
     pid_update(999);
-    ASSERT_TRUE(pid_update(555) > 0);
+    ASSERT_GT(pid_update(555), 0);
 
     pid_reset_error_history();
     pid_set_target(0);
     pid_update(-111);
-    ASSERT_TRUE(pid_update(-555) > 0);
+    ASSERT_GT(pid_update(-555), 0);
 
     pid_reset_error_history();
     pid_set_target(0);
     pid_update(-999);
-    ASSERT_TRUE(pid_update(-555) < 0);
+    ASSERT_LT(pid_update(-555), 0);
 }
 
 TEST(PidTest, FitnessReadyIsOk) {
@@ -192,14 +192,14 @@ TEST(PidTest, FitnessSignIsOk) {
     pid_init();
 
     PID_FILL_REPEATED(0, 100000);
-    ASSERT_TRUE(pid_get_fitness() == 0);
+    ASSERT_EQ(pid_get_fitness(), 0);
 
     pid_reset_fitness_history();
     for (int i = 0; i < 100000; ++i) {
         pid_update(-123);
         pid_update(123);
     }
-    ASSERT_TRUE(pid_get_fitness() < 0);
+    ASSERT_LT(pid_get_fitness(), 0);
 }
 
 TEST(PidTest, FitnessOrderIsOk) {
@@ -220,5 +220,5 @@ TEST(PidTest, FitnessOrderIsOk) {
     }
     good_fitness = pid_get_fitness();
 
-    ASSERT_TRUE(bad_fitness < good_fitness);
+    ASSERT_LT(bad_fitness, good_fitness);
 }
