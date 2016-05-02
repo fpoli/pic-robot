@@ -91,6 +91,6 @@ bool pid_fitness_ready(void) {
 }
 
 float pid_get_fitness(void) {
-    // Return the mean squared error
-    return pid.fitness_hist_sq_sum / PID_FITNESS_HISTORY_SIZE;
+    // Return the negative of the mean squared error
+    return - pid.fitness_hist_sq_sum / PID_FITNESS_HISTORY_SIZE;
 }

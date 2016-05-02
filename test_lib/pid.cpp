@@ -159,3 +159,49 @@ TEST(PidTest, DerivativeSignIsOk) {
     pid_run(-999);
     ASSERT_TRUE(pid_run(-555) < 0);
 }
+
+TEST(PidTest, FitnessReadyIsOk) {
+    pid_init();
+
+    for (int i = 0; i < 100000; ++i) {
+        pid_run(0);
+    }
+    ASSERT_TRUE(pid_fitness_ready());
+}
+
+TEST(PidTest, FitnessSignIsOk) {
+    pid_init();
+
+    for (int i = 0; i < 100000; ++i) {
+        pid_run(0);
+    }
+    ASSERT_TRUE(pid_get_fitness() == 0);
+
+    pid_reset_fitness_history();
+    for (int i = 0; i < 100000; ++i) {
+        pid_run(-123);
+        pid_run(123);
+    }
+    ASSERT_TRUE(pid_get_fitness() < 0);
+}
+
+TEST(PidTest, FitnessOrderIsOk) {
+    float bad_fitness, good_fitness;
+    pid_init();
+
+    for (int i = 0; i < 100000; ++i) {
+        pid_run(-12);
+        pid_run(300);
+    }
+    bad_fitness = pid_get_fitness();
+
+    pid_reset_fitness_history();
+    for (int i = 0; i < 100000; ++i) {
+        pid_run(-10);
+        pid_run(170);
+        pid_run(110);
+    }
+    good_fitness = pid_get_fitness();
+
+    ASSERT_TRUE(bad_fitness < good_fitness);
+}
