@@ -33,5 +33,5 @@ float rand_float(float min, float max) {
 
 // Return random uint16_t x: 0 <= x < max
 uint16_t rand_int(uint16_t max) {
-    return int(rand_float(0, max));
+    return (uint16_t)(rand_float(0, max));
 }

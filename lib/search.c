@@ -29,7 +29,7 @@ float search_get_param_val(uint16_t index) {
     if (index < SEARCH_NUM_PARAMETERS) {
         return search->param_val[index];
     } else {
-        return NAN;
+        return 0;
     }
 }
 
@@ -37,7 +37,7 @@ float search_get_test_val(uint16_t index) {
     if (index < SEARCH_NUM_PARAMETERS) {
         return search->test_val[index];
     } else {
-        return NAN;
+        return 0;
     }
 }
 

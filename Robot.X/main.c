@@ -33,7 +33,7 @@ void init(void) {
     play_ok();
 
     // Initialize rand()
-    srand(97133);
+    srand(42);
     printf("[INIT] rand() initialized\n");
     play_ok();
 
@@ -75,6 +75,7 @@ void main(void) {
     bool best_theta_available = false;
     float pid_reaction;
     uint16_t abs_power;
+    float fitness;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
@@ -124,6 +125,27 @@ void main(void) {
         motor_set_pwm(abs_power);
         motor_set_dir(pid_reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
 
+        #ifdef AUTOTUNE
+            if(pid_fitness_ready()) {
+                fitness = pid_get_fitness();
+                search_update_with_test_fitness(fitness);
+                pid_set_offset(search_get_test_val(PARAM_OFFSET));
+                pid_set_parameters(
+                    search_get_test_val(PARAM_KP),
+                    search_get_test_val(PARAM_KI),
+                    search_get_test_val(PARAM_KD)
+                );
+
+                #ifdef DEBUG
+                    printf("offset: %+6d  ", (int16_t)(10 * RAD_TO_DEG * search_get_test_val(PARAM_OFFSET)));
+                    printf("Kp: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KP)));
+                    printf("Ki: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KI)));
+                    printf("Kd: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KD)));
+                    printf("--> fitness: %+6d\n", (int16_t)(1000 * fitness));
+                #endif
+            }
+        #endif
+
         #ifdef DEBUG
             // Report data
             printf("fifo count: %4d   ", fifo_count_value);
@@ -131,20 +153,7 @@ void main(void) {
             printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * RAD_TO_DEG * 10));
             printf("best_theta: %+6d  ", (int16_t)(best_theta * RAD_TO_DEG * 10));
             printf("pid_reaction: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
-            printf("pid_fitness: %+6d\n", (int16_t)(pid_get_fitness()));
-        #endif
-
-        #ifdef AUTOTUNE
-            if(pid_fitness_ready()) {
-                search_update_with_test_fitness(pid_get_fitness());
-                pid_reset_fitness();
-                pid_set_offset();
-                pid_set_parameters(
-                    search_get_test_val(PARAM_KP),
-                    search_get_test_val(PARAM_KI),
-                    search_get_test_val(PARAM_KD)
-                );
-            }
+            printf("\n");
         #endif
 
         // Blink LED to indicate activity
