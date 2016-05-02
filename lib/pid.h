@@ -8,16 +8,14 @@
 #define PID_FITNESS_HISTORY_SIZE 256
 
 void pid_init(void);
-void pid_reset_error_history(void);
-void pid_update_error_history(float new_error);
+void pid_reset(void);
 void pid_set_sampling_frequency(float freq);
 void pid_set_parameters(float kp, float ki, float kd);
 void pid_set_target(float target);
 void pid_set_offset(float offset);
 float pid_update(float current_value);
 
-void pid_reset_fitness_history(void);
-void pid_update_fitness_history(float new_error);
+void pid_reset_fitness(void);
 bool pid_fitness_ready(void);
 float pid_get_fitness(void);
 

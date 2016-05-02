@@ -14,14 +14,6 @@ bool parity(uint8_t data) {
     return ones & 0x01;
 }
 
-uint16_t rand(void) {
-    static uint16_t lfsr = 0xACE1;
-    static bool flag = 0;
-
-    flag = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
-    return lfsr = (lfsr >> 1) | (flag << 15);
-}
-
 float constrainf(float value, float min, float max) {
     if (value <= min) return min;
     if (value >= max) return max;
@@ -32,4 +24,14 @@ uint16_t constrain(uint16_t value, uint16_t min, uint16_t max) {
     if (value <= min) return min;
     if (value >= max) return max;
     return value;
+}
+
+// Return random float x: min < x <= max
+float rand_float(float min, float max) {
+    return (1.0 * rand() / RAND_MAX * (max - min)) + min;
+}
+
+// Return random uint16_t x: 0 <= x < max
+uint16_t rand_int(uint16_t max) {
+    return int(rand_float(0, max));
 }

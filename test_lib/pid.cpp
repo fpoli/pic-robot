@@ -174,6 +174,11 @@ TEST(PidTest, FitnessReadyIsOk) {
     ASSERT_FALSE(pid_fitness_ready());
     ASSERT_FALSE(pid_fitness_ready());
 
+    PID_FILL_REPEATED(123, 100000);
+    ASSERT_TRUE(pid_fitness_ready());
+    pid_reset_fitness_history();
+    ASSERT_FALSE(pid_fitness_ready());
+
     pid_update(0);
     ASSERT_FALSE(pid_fitness_ready());
 
@@ -194,12 +199,20 @@ TEST(PidTest, FitnessSignIsOk) {
     PID_FILL_REPEATED(0, 100000);
     ASSERT_EQ(pid_get_fitness(), 0);
 
-    pid_reset_fitness_history();
     for (int i = 0; i < 100000; ++i) {
         pid_update(-123);
         pid_update(123);
     }
     ASSERT_LT(pid_get_fitness(), 0);
+
+    PID_FILL_REPEATED(0, 100000);
+    ASSERT_EQ(pid_get_fitness(), 0);
+
+    PID_FILL_REPEATED(42, 100000);
+    ASSERT_LT(pid_get_fitness(), 0);
+
+    PID_FILL_REPEATED(0, 100000);
+    ASSERT_EQ(pid_get_fitness(), 0);
 }
 
 TEST(PidTest, FitnessOrderIsOk) {
@@ -212,7 +225,6 @@ TEST(PidTest, FitnessOrderIsOk) {
     }
     bad_fitness = pid_get_fitness();
 
-    pid_reset_fitness_history();
     for (int i = 0; i < 100000; ++i) {
         pid_update(-10);
         pid_update(170);

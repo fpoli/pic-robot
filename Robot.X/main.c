@@ -1,15 +1,21 @@
 #include <xc.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
 #include "../lib/config.h"
 #include "../lib/pid.h"
-#include "../lib/utils.h"
+#include "../lib/search.h"
 #include "../lib/mpu6050.h"
 #include "../lib/error.h"
 #include "../lib/uart.h"
 #include "../lib/sound.h"
 #include "../lib/motor.h"
+
+#define PARAM_OFFSET 0
+#define PARAM_KP 1
+#define PARAM_KI 2
+#define PARAM_KD 3
 
 void init(void) {
     // Initialize LED pin as output
@@ -26,17 +32,30 @@ void init(void) {
     printf("[INIT] UART module initialized\n");
     play_ok();
 
-    // Initialize motor driver
-    motor_init();
-    printf("[INIT] Motor driver initialized\n");
+    // Initialize rand()
+    srand(97133);
+    printf("[INIT] rand() initialized\n");
     play_ok();
 
+    // Initialize PID
     pid_init();
     pid_set_sampling_frequency(1);  // FIXME
     pid_set_target(0);
     pid_set_offset(0);
     pid_set_parameters(100, 0, 0);
     printf("[INIT] PID initialized\n");
+    play_ok();
+
+    // Initialize search module
+    search_init();
+    search_init_param_val(PARAM_OFFSET, 0, -10 * DEG_TO_RAD, + 10 * DEG_TO_RAD);
+    search_init_param_val(PARAM_KP, 100, 0, 1000);
+    search_init_param_val(PARAM_KI, 0, 0, 1000);
+    search_init_param_val(PARAM_KD, 0, 0, 1000);
+
+    // Initialize motor driver
+    motor_init();
+    printf("[INIT] Motor driver initialized\n");
     play_ok();
 
     // Initialize I2C and MPU6050
@@ -108,11 +127,24 @@ void main(void) {
         #ifdef DEBUG
             // Report data
             printf("fifo count: %4d   ", fifo_count_value);
-            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * 180 / M_PI * 10));
-            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * 180 / M_PI * 10));
-            printf("best_theta: %+6d  ", (int16_t)(best_theta * 180 / M_PI * 10));
+            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * RAD_TO_DEG * 10));
+            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * RAD_TO_DEG * 10));
+            printf("best_theta: %+6d  ", (int16_t)(best_theta * RAD_TO_DEG * 10));
             printf("pid_reaction: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
             printf("pid_fitness: %+6d\n", (int16_t)(pid_get_fitness()));
+        #endif
+
+        #ifdef AUTOTUNE
+            if(pid_fitness_ready()) {
+                search_update_with_test_fitness(pid_get_fitness());
+                pid_reset_fitness();
+                pid_set_offset();
+                pid_set_parameters(
+                    search_get_test_val(PARAM_KP),
+                    search_get_test_val(PARAM_KI),
+                    search_get_test_val(PARAM_KD)
+                );
+            }
         #endif
 
         // Blink LED to indicate activity

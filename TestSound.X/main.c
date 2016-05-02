@@ -1,9 +1,9 @@
+#include <stdlib.h>
 #include <stdint.h>
 #include <xc.h>
 #include <usart.h>
 #include "../lib/config.h"
 #include "../lib/delay.h"
-#include "../lib/utils.h"
 #include "../lib/sound.h"
 #include "../lib/melodies.h"
 
@@ -11,6 +11,8 @@ void init(void) {
     // Initialize data direction of PORTB registers
     // (pic18f45k22 data sheet, section 10.2, page 140)
     TRISBbits.TRISB3 = 0;  // output
+
+    srand(586462);
 }
 
 void main(void) {

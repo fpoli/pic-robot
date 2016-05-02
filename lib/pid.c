@@ -1,11 +1,19 @@
 #include "pid.h"
 
+void pid_reset_error_history(void);
+void pid_update_error_history(float new_error);
+void pid_reset_fitness_history(void);
+void pid_update_fitness_history(float new_error);
 Pid_state *pid;
 
 void pid_init(void) {
     static Pid_state pid_state;
     pid = &pid_state;
 
+    pid_reset();
+}
+
+void pid_reset(void) {
     pid->target = 0;
     pid->offset = 0;
     pid->sampling_freq = 1;
@@ -68,6 +76,10 @@ float pid_update(float current_value) {
     return (pid->kp * error) \
          + (pid->ki * pid->error_hist_sum) \
          + (pid->kd * error_derivate);
+}
+
+void pid_reset_fitness(void) {
+    pid_reset_fitness_history();
 }
 
 void pid_reset_fitness_history(void) {
