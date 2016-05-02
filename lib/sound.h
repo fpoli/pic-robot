@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "config.h"
-#include "utils.h"
+#include "delay.h"
 
 #ifndef SPEAKER_PIN
 #error "sound.h library requires the definition of SPEAKER_PIN"

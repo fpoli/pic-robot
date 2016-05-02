@@ -1,9 +1,12 @@
 #include "../lib/pid.c"
 #include <gtest/gtest.h>
 
+#define PID_FILL_REPEATED(val, num) \
+    for (int i = 0; i < (num); ++i) { pid_update(val); }
+
 TEST(PidTest, CheckInitialInternalState) {
     pid_init();
-    ASSERT_EQ(pid->target, 0);
+    ASSERT_EQ(pid->offset, 0);
     ASSERT_EQ(pid->sampling_freq, 1);
     ASSERT_EQ(pid->kp, 0);
     ASSERT_EQ(pid->ki, 0);
@@ -21,9 +24,7 @@ TEST(PidTest, ResetErrorHistoryWorks) {
     a1 = pid_update(123);
     b1 = pid_update(-987);
     c1 = pid_update(123);
-    for (int i = 0; i < 10000; ++i) {
-        pid_update(-134);
-    }
+    PID_FILL_REPEATED(123, 100000);
     d1 = pid_update(10);
 
     // Reset once and compare
@@ -31,9 +32,7 @@ TEST(PidTest, ResetErrorHistoryWorks) {
     a2 = pid_update(123);
     b2 = pid_update(-987);
     c2 = pid_update(123);
-    for (int i = 0; i < 10000; ++i) {
-        pid_update(-134);
-    }
+    PID_FILL_REPEATED(123, 100000);
     d2 = pid_update(10);
 
     ASSERT_EQ(a1, a2);
@@ -49,9 +48,7 @@ TEST(PidTest, ResetErrorHistoryWorks) {
     a2 = pid_update(123);
     b2 = pid_update(-987);
     c2 = pid_update(123);
-    for (int i = 0; i < 10000; ++i) {
-        pid_update(-134);
-    }
+    PID_FILL_REPEATED(123, 100000);
     d2 = pid_update(10);
 
     ASSERT_EQ(a1, a2);
@@ -148,8 +145,7 @@ TEST(PidTest, DerivativeSignIsOk) {
     pid_init();
     pid_set_parameters(0, 0, 1);
 
-    pid_set_target(0);
-    pid_update(111);
+    pid_set_target(111);
     ASSERT_TRUE(pid_update(555) < 0);
 
     pid_reset_error_history();
@@ -171,18 +167,31 @@ TEST(PidTest, DerivativeSignIsOk) {
 TEST(PidTest, FitnessReadyIsOk) {
     pid_init();
 
-    for (int i = 0; i < 100000; ++i) {
-        pid_update(0);
-    }
+    PID_FILL_REPEATED(123, 100000);
     ASSERT_TRUE(pid_fitness_ready());
+    ASSERT_TRUE(pid_fitness_ready());
+    pid_get_fitness();
+    ASSERT_FALSE(pid_fitness_ready());
+    ASSERT_FALSE(pid_fitness_ready());
+
+    pid_update(0);
+    ASSERT_FALSE(pid_fitness_ready());
+
+    PID_FILL_REPEATED(123, 100000);
+    ASSERT_TRUE(pid_fitness_ready());
+    pid_init();
+    ASSERT_FALSE(pid_fitness_ready());
+
+    PID_FILL_REPEATED(123, 100000);
+    ASSERT_TRUE(pid_fitness_ready());
+    pid_get_fitness();
+    ASSERT_FALSE(pid_fitness_ready());
 }
 
 TEST(PidTest, FitnessSignIsOk) {
     pid_init();
 
-    for (int i = 0; i < 100000; ++i) {
-        pid_update(0);
-    }
+    PID_FILL_REPEATED(0, 100000);
     ASSERT_TRUE(pid_get_fitness() == 0);
 
     pid_reset_fitness_history();

@@ -7,6 +7,7 @@ void pid_init(void) {
     pid = &pid_state;
 
     pid->target = 0;
+    pid->offset = 0;
     pid->sampling_freq = 1;
     pid->kp = 0;
     pid->ki = 0;
@@ -47,8 +48,12 @@ void pid_set_target(float target) {
     pid->target = target;
 }
 
+void pid_set_offset(float offset) {
+    pid->offset = offset;
+}
+
 float pid_update(float current_value) {
-    float error = pid->target - current_value;
+    float error = (pid->target + pid->offset) - current_value;
     pid_update_error_history(error);
     pid_update_fitness_history(error);
 
@@ -66,26 +71,21 @@ float pid_update(float current_value) {
 }
 
 void pid_reset_fitness_history(void) {
-    for (uint16_t i = 0; i < PID_FITNESS_HISTORY_SIZE; ++i) {
-        pid->fitness_hist[i] = 0;
-    }
-    pid->fitness_hist_top = 0;
+    pid->fitness_hist_size = 0;
     pid->fitness_hist_sq_sum = 0;
     pid->fitness_ready = false;
 }
 
-
 void pid_update_fitness_history(float new_error) {
     float new_sq_error = new_error * new_error;
-    pid->fitness_hist_top = NEXT_MOD(
-        pid->fitness_hist_top,
-        PID_FITNESS_HISTORY_SIZE
-    );
-    pid->fitness_hist_sq_sum -= pid->fitness_hist[pid->fitness_hist_top];
-    pid->fitness_hist[pid->fitness_hist_top] = new_sq_error;
+    pid->fitness_hist_size += 1;
     pid->fitness_hist_sq_sum += new_sq_error;
-    if (pid->fitness_hist_top == PID_FITNESS_HISTORY_SIZE - 1) {
+    if (pid->fitness_hist_size == PID_FITNESS_HISTORY_SIZE) {
+        // Fitness is the negative of the mean squared error
+        pid->fitness = - pid->fitness_hist_sq_sum;
         pid->fitness_ready = true;
+        pid->fitness_hist_size = 0;
+        pid->fitness_hist_sq_sum = 0;
     }
 }
 
@@ -94,6 +94,7 @@ bool pid_fitness_ready(void) {
 }
 
 float pid_get_fitness(void) {
-    // Return the negative of the mean squared error
-    return - pid->fitness_hist_sq_sum / PID_FITNESS_HISTORY_SIZE;
+    // Fitness is the negative of the mean squared error
+    pid->fitness_ready = false;
+    return pid->fitness;
 }

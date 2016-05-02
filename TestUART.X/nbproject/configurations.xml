@@ -15,6 +15,8 @@
       <itemPath>../lib/config.h</itemPath>
       <itemPath>../lib/sound.h</itemPath>
       <itemPath>../lib/utils.c</itemPath>
+      <itemPath>../lib/delay.c</itemPath>
+      <itemPath>../lib/delay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

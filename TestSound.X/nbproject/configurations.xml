@@ -17,6 +17,8 @@
       <itemPath>../lib/utils.c</itemPath>
       <itemPath>../lib/melodies.h</itemPath>
       <itemPath>../lib/melodies.c</itemPath>
+      <itemPath>../lib/delay.c</itemPath>
+      <itemPath>../lib/delay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

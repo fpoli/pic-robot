@@ -3,7 +3,7 @@
 #include <xc.h>
 #include <usart.h>
 #include "../lib/config.h"
-#include "../lib/utils.h"
+#include "../lib/delay.h"
 
 void init(void) {
     // Initialize data direction of PORTB registers

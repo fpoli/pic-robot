@@ -20,6 +20,8 @@
       <itemPath>../lib/i2c.h</itemPath>
       <itemPath>../lib/pid.c</itemPath>
       <itemPath>../lib/pid.h</itemPath>
+      <itemPath>../lib/delay.c</itemPath>
+      <itemPath>../lib/delay.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

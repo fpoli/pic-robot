@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <math.h>
 #include "../lib/config.h"
-#include "../lib/pid.h"
-#include "../lib/utils.h"
 #include "../lib/mpu6050.h"
 #include "../lib/error.h"
 #include "../lib/uart.h"

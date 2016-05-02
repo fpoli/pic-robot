@@ -2,6 +2,7 @@
 #include <xc.h>
 #include <usart.h>
 #include "../lib/config.h"
+#include "../lib/delay.h"
 #include "../lib/utils.h"
 #include "../lib/sound.h"
 #include "../lib/melodies.h"

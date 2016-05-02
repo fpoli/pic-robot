@@ -32,8 +32,9 @@ void init(void) {
     play_ok();
 
     pid_init();
-    pid_set_target(0);
     pid_set_sampling_frequency(1);  // FIXME
+    pid_set_target(0);
+    pid_set_offset(0);
     pid_set_parameters(100, 0, 0);
     printf("[INIT] PID initialized\n");
     play_ok();
@@ -100,7 +101,7 @@ void main(void) {
         }
 
         // Set motor power and direction
-        abs_power = clamp((uint16_t)fabs(round(pid_reaction)), 0, 1023);
+        abs_power = constrain((uint16_t)fabs(round(pid_reaction)), 0, 1023);
         motor_set_pwm(abs_power);
         motor_set_dir(pid_reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
 
