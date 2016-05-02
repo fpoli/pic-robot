@@ -31,6 +31,13 @@ void init(void) {
     printf("[INIT] Motor driver initialized\n");
     play_ok();
 
+    pid_init();
+    pid_set_target(0);
+    pid_set_sampling_frequency(1);  // FIXME
+    pid_set_parameters(100, 0, 0);
+    printf("[INIT] PID initialized\n");
+    play_ok();
+
     // Initialize I2C and MPU6050
     MPU6050_init();
     printf("[INIT] MPU6050 initialized\n");
@@ -46,8 +53,8 @@ void main(void) {
     int16_t gyro_x, gyro_y, gyro_z;
     float theta_accel, theta_gyro = 0, rotation_gyro, best_theta = 0;
     bool best_theta_available = false;
-    float reaction;
-    uint16_t power;
+    float pid_reaction;
+    uint16_t abs_power;
 
     printf("[MAIN] Start main loop\n");
     while (1) {
@@ -87,23 +94,24 @@ void main(void) {
                 best_theta = theta_accel;
                 best_theta_available = true;
             }
+
+            // PID control
+            pid_reaction = pid_update(best_theta);
         }
 
-        // PID control
-        reaction = pid(best_theta, 0, 1000.0, 0, 0);
-
         // Set motor power and direction
-        power = clamp((uint16_t)fabs(round(reaction)), 0, 1023);
-        motor_set_pwm(power);
-        motor_set_dir(reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
+        abs_power = clamp((uint16_t)fabs(round(pid_reaction)), 0, 1023);
+        motor_set_pwm(abs_power);
+        motor_set_dir(pid_reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
 
         #ifdef DEBUG
             // Report data
             printf("fifo count: %4d   ", fifo_count_value);
-            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * 1800 / M_PI));
-            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * 1800 / M_PI));
-            printf("best_theta: %+6d  ", (int16_t)(best_theta * 1800 / M_PI));
-            printf("reaction: %+6d --> %4u\n", (int16_t)(reaction), power);
+            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * 180 / M_PI * 10));
+            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * 180 / M_PI * 10));
+            printf("best_theta: %+6d  ", (int16_t)(best_theta * 180 / M_PI * 10));
+            printf("pid_reaction: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
+            printf("pid_fitness: %+6d\n", (int16_t)(pid_get_fitness()));
         #endif
 
         // Blink LED to indicate activity

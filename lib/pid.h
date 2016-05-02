@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define PID_ERROR_HISTORY_SIZE 128
-#define PID_FITNESS_HISTORY_SIZE 2000
+#define PID_FITNESS_HISTORY_SIZE 256
 
 void pid_init(void);
 void pid_reset_error_history(void);

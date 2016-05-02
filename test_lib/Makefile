@@ -14,7 +14,7 @@ $(MAIN_TEST): $(TEST_OBJ)
 	$(CC) $(TEST_OBJ) -o $@ -lgtest_main $(CCFLAGS)
 
 test: $(MAIN_TEST)
-	@./$(MAIN_TEST) --gtest_repeat=1
+	@./$(MAIN_TEST) --gtest_repeat=1 && ./$(MAIN_TEST) --gtest_repeat=10
 
 clean:
 	@rm -rf $(TEST_OBJ) $(MAIN_TEST)
