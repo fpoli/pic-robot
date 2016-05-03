@@ -37,21 +37,27 @@ void init(void) {
     printf("[INIT] rand() initialized\n");
     play_ok();
 
+    // Initial PID values
+    float init_offset = 4.5 * DEG_TO_RAD;
+    float init_kp = 1700;
+    float init_ki = 0;
+    float init_kd = 0;
+
     // Initialize PID
     pid_init();
     pid_set_sampling_frequency(1);  // FIXME
     pid_set_target(0);
-    pid_set_offset(0);
-    pid_set_parameters(100, 0, 0);
+    pid_set_offset(init_offset);
+    pid_set_parameters(init_kp, init_ki, init_kd);
     printf("[INIT] PID initialized\n");
     play_ok();
 
     // Initialize search module
     search_init();
-    search_init_param_val(PARAM_OFFSET, 0, -10 * DEG_TO_RAD, + 10 * DEG_TO_RAD);
-    search_init_param_val(PARAM_KP, 100, 0, 1000);
-    search_init_param_val(PARAM_KI, 0, 0, 1000);
-    search_init_param_val(PARAM_KD, 0, 0, 1000);
+    search_init_param_val(PARAM_OFFSET, init_offset, 0, 10 * DEG_TO_RAD);
+    search_init_param_val(PARAM_KP, init_kp, 1000, 3000);
+    search_init_param_val(PARAM_KI, init_ki, 0, 10);
+    search_init_param_val(PARAM_KD, init_kd, 0, 10);
 
     // Initialize motor driver
     motor_init();
@@ -125,6 +131,24 @@ void main(void) {
         motor_set_pwm(abs_power);
         motor_set_dir(pid_reaction >= 0 ? DIR_FORWARD : DIR_REVERSED);
 
+        #ifdef DEBUG
+            #ifdef AUTOTUNE
+                printf("fitness: %+6d  ", (int16_t)(10 * fitness));
+                printf("(offset: %+6d  ", (int16_t)(10 * RAD_TO_DEG * search_get_test_val(PARAM_OFFSET)));
+                printf("Kp: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KP)));
+                printf("Ki: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KI)));
+                printf("Kd: %+6d)  ", (int16_t)(10 * search_get_test_val(PARAM_KD)));
+                printf("best_theta: %+6d  ", (int16_t)(10 * RAD_TO_DEG * best_theta));
+                printf("pid: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
+            #else
+                printf("fifo count: %4d   ", fifo_count_value);
+                printf("theta_accel: %+6d  ", (int16_t)(theta_accel * RAD_TO_DEG * 10));
+                printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * RAD_TO_DEG * 10));
+                printf("best_theta: %+6d  ", (int16_t)(best_theta * RAD_TO_DEG * 10));
+                printf("pid_reaction: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
+            #endif
+        #endif
+
         #ifdef AUTOTUNE
             if(pid_fitness_ready()) {
                 fitness = pid_get_fitness();
@@ -135,25 +159,7 @@ void main(void) {
                     search_get_test_val(PARAM_KI),
                     search_get_test_val(PARAM_KD)
                 );
-
-                #ifdef DEBUG
-                    printf("offset: %+6d  ", (int16_t)(10 * RAD_TO_DEG * search_get_test_val(PARAM_OFFSET)));
-                    printf("Kp: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KP)));
-                    printf("Ki: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KI)));
-                    printf("Kd: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KD)));
-                    printf("--> fitness: %+6d\n", (int16_t)(1000 * fitness));
-                #endif
             }
-        #endif
-
-        #ifdef DEBUG
-            // Report data
-            printf("fifo count: %4d   ", fifo_count_value);
-            printf("theta_accel: %+6d  ", (int16_t)(theta_accel * RAD_TO_DEG * 10));
-            printf("theta_gyro: %+6d  ", (int16_t)(theta_gyro * RAD_TO_DEG * 10));
-            printf("best_theta: %+6d  ", (int16_t)(best_theta * RAD_TO_DEG * 10));
-            printf("pid_reaction: %+6d --> %4u\n", (int16_t)(pid_reaction), abs_power);
-            printf("\n");
         #endif
 
         // Blink LED to indicate activity

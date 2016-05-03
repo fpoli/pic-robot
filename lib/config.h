@@ -14,7 +14,7 @@
 #define LED_PIN LATBbits.LATB3
 #define LED_TRIS LATBbits.LATB3
 
-// #define DEBUG
+#define DEBUG
 #define AUTOTUNE
 
 // NOTE: Configuration bits are not writable in order to protect the bootloader.

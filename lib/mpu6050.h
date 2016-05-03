@@ -86,9 +86,12 @@ typedef struct {
 #define ACCEL_GYRO_REGS_SIZE 12
 
 
+// sample rate = 1kHz / (1 + SMPRT_DIV_VALUE)
 #ifdef DEBUG
+// sample rate = 62.5 Hz
 #define SMPRT_DIV_VALUE 15
 #else
+// sample rate = 500 Hz
 #define SMPRT_DIV_VALUE 2
 #endif
 

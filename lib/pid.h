@@ -3,9 +3,17 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "config.h"
 
 #define PID_ERROR_HISTORY_SIZE 128
-#define PID_FITNESS_HISTORY_SIZE 256
+
+#ifdef DEBUG
+// 10 sec @ sample rate = 62.5 Hz
+#define PID_FITNESS_HISTORY_SIZE 625
+#else
+// 10 sec @ sample rate = 500 Hz
+#define PID_FITNESS_HISTORY_SIZE 5000
+#endif
 
 void pid_init(void);
 void pid_reset(void);
