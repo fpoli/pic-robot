@@ -39,7 +39,7 @@ void init(void) {
 
     // Initial PID values
     float init_offset = 4.5 * DEG_TO_RAD;
-    float init_kp = 1700;
+    float init_kp = 3000;
     float init_ki = 0;
     float init_kd = 0;
 
@@ -52,9 +52,9 @@ void init(void) {
     play_ok();
 
     // Initialize search module
-    search_init(4);
+    search_init(2);
     search_init_param_val(PARAM_OFFSET, init_offset, 0, 10 * DEG_TO_RAD);
-    search_init_param_val(PARAM_KP, init_kp, 1000, 3000);
+    search_init_param_val(PARAM_KP, init_kp, 2500, 3500);
     search_init_param_val(PARAM_KI, init_ki, 0, 10);
     search_init_param_val(PARAM_KD, init_kd, 0, 10);
 
@@ -122,7 +122,7 @@ void main(void) {
             }
 
             // PID control
-            pid_reaction = pid_update(best_theta, DT);
+            pid_reaction = pid_update(best_theta, SENSOR_DT);
         }
 
         // Set motor power and direction
@@ -132,7 +132,7 @@ void main(void) {
 
         #ifdef DEBUG
             #ifdef AUTOTUNE
-                printf("fitness: %+6d  ", (int16_t)(10 * fitness));
+                printf("fitness: %+6d  ", (int16_t)(1000 * fitness));
                 printf("(offset: %+6d  ", (int16_t)(10 * RAD_TO_DEG * search_get_test_val(PARAM_OFFSET)));
                 printf("Kp: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KP)));
                 printf("Ki: %+6d  ", (int16_t)(10 * search_get_test_val(PARAM_KI)));
@@ -149,7 +149,7 @@ void main(void) {
         #endif
 
         #ifdef AUTOTUNE
-            if(pid_fitness_ready()) {
+            if (pid_fitness_ready()) {
                 fitness = pid_get_fitness();
                 search_update_with_test_fitness(fitness);
                 pid_set_offset(search_get_test_val(PARAM_OFFSET));

@@ -8,7 +8,7 @@
 
 #define PID_INTEGRAL_LIMIT 500
 
-#define PID_FITNESS_MEASUREMENT_TIME 10
+#define PID_FITNESS_MEASUREMENT_MS 10000
 
 
 void pid_init(void);
@@ -33,7 +33,7 @@ typedef struct {
     float last_error;
     float error_integral;
     // Fitness
-    uint16_t fitness_duration;
+    uint16_t fitness_time_ms;
     float fitness_error_sq_sum;
     float fitness;
     bool fitness_ready;

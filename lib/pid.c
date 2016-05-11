@@ -65,7 +65,7 @@ float pid_update(float current_value, float dt) {
 }
 
 void pid_reset_fitness_history(void) {
-    pid->fitness_duration = 0;
+    pid->fitness_time_ms = 0;
     pid->fitness_error_sq_sum = 0;
     pid->fitness = 0;
     pid->fitness_ready = false;
@@ -73,12 +73,12 @@ void pid_reset_fitness_history(void) {
 
 void pid_update_fitness(float new_error, float dt) {
     float new_sq_error = new_error * new_error;
-    pid->fitness_duration += dt;
+    pid->fitness_time_ms += dt * 1000;
     pid->fitness_error_sq_sum += new_sq_error * dt;
-    if (pid->fitness_duration >= PID_FITNESS_MEASUREMENT_TIME) {
+    if (pid->fitness_time_ms >= PID_FITNESS_MEASUREMENT_MS) {
         // Fitness is the negative of the mean squared error
         pid->fitness = - pid->fitness_error_sq_sum;
-        pid->fitness_duration = 0;
+        pid->fitness_time_ms = 0;
         pid->fitness_error_sq_sum = 0;
         pid->fitness_ready = true;
     }

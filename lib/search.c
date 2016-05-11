@@ -19,7 +19,7 @@ void search_init(uint16_t num_params) {
 }
 
 void search_init_param_val(uint16_t index, float value, float min, float max) {
-    if (index < search->num_params) {
+    if (index < SEARCH_MAX_PARAMETERS) {
         search->param_val[index] = value;
         search->test_val[index] = value;
         search->param_min[index] = min;
@@ -28,7 +28,7 @@ void search_init_param_val(uint16_t index, float value, float min, float max) {
 }
 
 float search_get_param_val(uint16_t index) {
-    if (index < search->num_params) {
+    if (index < SEARCH_MAX_PARAMETERS) {
         return search->param_val[index];
     } else {
         return 0;
@@ -36,7 +36,7 @@ float search_get_param_val(uint16_t index) {
 }
 
 float search_get_test_val(uint16_t index) {
-    if (index < search->num_params) {
+    if (index < SEARCH_MAX_PARAMETERS) {
         return search->test_val[index];
     } else {
         return 0;
@@ -47,13 +47,13 @@ void search_update_with_test_fitness(float test_fitness) {
     // Gradient descent with decreasing temperature
     if (test_fitness >= search->best_fitness) {
         search->best_fitness = test_fitness;
-        for (uint16_t i = 0; i < search->num_params; ++i) {
+        for (uint16_t i = 0; i < SEARCH_MAX_PARAMETERS; ++i) {
             search->param_val[i] = search->test_val[i];
         }
     }
 
     // Prepare test values
-    for (uint16_t i = 0; i < search->num_params; ++i) {
+    for (uint16_t i = 0; i < SEARCH_MAX_PARAMETERS; ++i) {
         search->test_val[i] = search->param_val[i];
     }
 

@@ -17,12 +17,6 @@
 #define DEBUG
 #define AUTOTUNE
 
-#ifdef DEBUG
-#define DT (1.0 / (1000 / (1 + 15)))
-#else
-#define DT (1.0 / (1000 / (1 + 2)))
-#endif
-
 // NOTE: Configuration bits are not writable in order to protect the bootloader.
 // So, it is useless to set them
 
