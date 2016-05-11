@@ -27,7 +27,7 @@
 TEST(SearchTest, CheckInitialInternalState) {
     float fitness;
 
-    search_init();
+    search_init(4);
     search_init_param_val(W, 0, -1000, 1000);
     search_init_param_val(X, -1, -1000, 1000);
     search_init_param_val(Y, -10, -2000, 2000);

@@ -45,7 +45,6 @@ void init(void) {
 
     // Initialize PID
     pid_init();
-    pid_set_sampling_frequency(1);  // FIXME
     pid_set_target(0);
     pid_set_offset(init_offset);
     pid_set_parameters(init_kp, init_ki, init_kd);
@@ -53,7 +52,7 @@ void init(void) {
     play_ok();
 
     // Initialize search module
-    search_init();
+    search_init(4);
     search_init_param_val(PARAM_OFFSET, init_offset, 0, 10 * DEG_TO_RAD);
     search_init_param_val(PARAM_KP, init_kp, 1000, 3000);
     search_init_param_val(PARAM_KI, init_ki, 0, 10);
@@ -123,7 +122,7 @@ void main(void) {
             }
 
             // PID control
-            pid_reaction = pid_update(best_theta);
+            pid_reaction = pid_update(best_theta, DT);
         }
 
         // Set motor power and direction

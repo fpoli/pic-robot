@@ -3,7 +3,7 @@ Self-balancing robot
 
 [![Build Status](https://travis-ci.org/fpoli/pic-robot.svg?branch=master)](https://travis-ci.org/fpoli/pic-robot)
 
-Firmware source code of a self-balancing robot.
+A self blanacing robot based on the PIC18F microcontroller.
 
 Project developed for the robotics course at Galilean School of Higher Education (Padova, Italy).
 
